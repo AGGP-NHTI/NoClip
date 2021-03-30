@@ -12,7 +12,11 @@ public class Pawn : Actor
 
     public float StartingHealth = 100.0f;
     public float Health = 100.0f;
-    public bool IsSpectator = true; 
+    public bool IsSpectator = true;
+    public Transform groundCheck;
+    protected float groundDistance = 0.4f;
+    public LayerMask groundMask;
+    protected bool isGrounded;
 
     /// <summary>
     /// Controler who is in charge of this object. 
@@ -83,14 +87,14 @@ public class Pawn : Actor
         
     }
 
-    public virtual void Horizontal(float value)
+    public virtual void Look()
     {
 
     }
 
-    public virtual void Vertical(float value)
+    public virtual void Move(float x, float z)
     {
-
+       
     }
 
     public virtual void Fire1(bool value)

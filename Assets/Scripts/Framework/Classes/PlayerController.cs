@@ -8,7 +8,6 @@ public class PlayerController : Controller
     public GameObject SpectatorHUD;
     public GameObject PawnHUD;
 
-
     /// <summary>
     /// Show Input for this controler, Super Spammy when true. 
     /// </summary>
@@ -83,35 +82,25 @@ public class PlayerController : Controller
             Fire4(InputCurrent.ButtonWest);
         }
 
-        Vertical(InputCurrent.VerticalLeft);
-        Horizontal(InputCurrent.HorizontalLeft);
+        Look();
+        Move(InputCurrent.HorizontalLeft, InputCurrent.VerticalLeft);
     }
 
-    public virtual void Horizontal(float value)
+    public virtual void Move(float x, float z)
     {
         Pawn pawn = ((Pawn)ControlledPawn);
         if (pawn)
         {
-            pawn.Horizontal(value);
-        }
-
-        if (value != 0)
-        {
-            LOG("Del-Horizontal (" + value + ")");
+            pawn.Move(x, z);
         }
     }
 
-    public virtual void Vertical(float value)
+    public virtual void Look()
     {
         Pawn pawn = ((Pawn)ControlledPawn);
         if (pawn)
         {
-            pawn.Vertical(value);
-        }
-
-        if (value != 0)
-        {
-            LOG("Del-Vertical (" + value + ")");
+            pawn.Look();
         }
     }
 

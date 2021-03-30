@@ -61,7 +61,7 @@ public class InputPoller : Info {
 		newInputState.ButtonNorth = Input.GetButtonDown("Fire1");
 		newInputState.ButtonSouth = Input.GetButtonDown("Fire2");
 		newInputState.ButtonEast = Input.GetButtonDown("Fire3");
-		newInputState.ButtonWest = Input.GetButtonDown("Fire4");
+		//newInputState.ButtonWest = Input.GetButtonDown("Fire4");
 	}
 
 	/// <summary>
