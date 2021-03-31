@@ -7,7 +7,8 @@ public class Controller : Info {
 	public bool IsAI = false;
 	public bool IsHuman = false;
 	public GameObject newPawnInstance;
-	   
+	public Camera startCam;
+
 	/// <summary>
 	/// Player Number for Grabbing Input
 	/// </summary>
@@ -86,6 +87,8 @@ public class Controller : Info {
 
 		ControlPawn(SpectatorInstance);
 
+		startCam.gameObject.SetActive(true);
+
 		//Debug.Log("Request Spectator " + SpectatorInstance);
 
 		return true;
@@ -94,6 +97,8 @@ public class Controller : Info {
 	public virtual bool RequestSpawn()
 	{
 		//Debug.Log("Request Spawn");
+
+		startCam.gameObject.SetActive(false);
 
 		return true;
 	}
