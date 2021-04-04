@@ -59,9 +59,9 @@ public class InputPoller : Info {
 		newInputState.HorizontalLeft = Input.GetAxis("Horizontal");
 		newInputState.VerticalLeft = Input.GetAxis("Vertical");
 		newInputState.ButtonNorth = Input.GetButtonDown("Fire1");
-		newInputState.ButtonSouth = Input.GetButtonDown("Fire2");
-		newInputState.ButtonEast = Input.GetButtonDown("Fire3");
-		//newInputState.ButtonWest = Input.GetButtonDown("Fire4");
+		newInputState.ButtonSouth = Input.GetButtonDown("Jump");
+		newInputState.ButtonEast = Input.GetButtonDown("Fire2");
+		newInputState.ButtonWest = Input.GetButtonDown("Fire3");
 	}
 
 	/// <summary>

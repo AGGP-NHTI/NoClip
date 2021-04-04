@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Player Jump currently set to Fire1 - Needs update for SPACE jump
-
 public class PlayerPawn : Pawn
 {
 	Rigidbody rb;
@@ -63,13 +61,17 @@ public class PlayerPawn : Pawn
 		CC.Move(velocity * Time.deltaTime);
 	}
 
-	public override void Fire1(bool value)
+	public override void Jump()
 	{
-		// Used to jump - is temp location - need to add control for JUMP
-		if(isGrounded)
+		if (isGrounded)
 		{
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 		}
+	}
+
+	public override void Fire1(bool value)
+	{
+	
 	}
 
 	public override void Fire2(bool value)
@@ -78,11 +80,6 @@ public class PlayerPawn : Pawn
 	}
 
 	public override void Fire3(bool value)
-	{
-
-	}
-
-	public override void Fire4(bool value)
 	{
 
 	}
