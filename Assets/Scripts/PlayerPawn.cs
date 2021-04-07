@@ -16,7 +16,12 @@ public class PlayerPawn : Pawn
 	Vector3 velocity;
 	public float lookXLimit = 90.0f; //	The max angle for looking up and down - 90f is directly up and down
 	private float rotationX = 0f;
-	public float gravity = -9.81f;	// The speed in which the pawn will fall
+	public float gravity = -9.81f;  // The speed in which the pawn will fall
+
+	//Wallrun components
+	public LayerMask isWall;
+	public float wallRunForce, maxWallRunTime, maxWallRunSpeed;
+	bool wallRight, wallLeft, isWallRunning;
 
 	void Awake()
 	{
@@ -37,6 +42,9 @@ public class PlayerPawn : Pawn
 		{
 			velocity.y = -2f;
 		}
+
+		CheckForWall();
+		WallRunInput();
 	}
 
 	public override void Look()
@@ -66,6 +74,87 @@ public class PlayerPawn : Pawn
 		if (isGrounded)
 		{
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+		}
+
+		if(isWallRunning)
+		{
+			if((wallLeft && !Input.GetKey(KeyCode.D)) || (wallLeft && !Input.GetKey(KeyCode.A)))
+			{
+				velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+			}
+
+			if(wallRight || wallLeft && Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+			{
+				rb.AddForce(-Vector3.up * jumpHeight * 3.2f);
+			}
+
+			if(wallRight && Input.GetKey(KeyCode.A))
+			{
+				rb.AddForce(Vector3.left * jumpHeight * 3.2f);
+			}
+
+			if (wallLeft && Input.GetKey(KeyCode.D))
+			{
+				rb.AddForce(Vector3.right * jumpHeight * 3.2f);
+			}
+
+			rb.AddForce(Vector3.forward * jumpHeight);
+		}
+	}
+
+	private void WallRunInput()
+	{
+		if(Input.GetKey(KeyCode.D) && wallRight)
+		{
+			StartWallRun();
+		}
+
+		if (Input.GetKey(KeyCode.A) && wallLeft)
+		{
+			StartWallRun();
+		}
+	}
+
+	private void StartWallRun()
+	{
+		rb.useGravity = false;
+		isWallRunning = true;
+
+		if(rb.velocity.magnitude <= maxWallRunSpeed)
+		{
+			rb.AddForce(playerCamera.transform.forward * wallRunForce * Time.deltaTime);
+
+			if(wallRight)
+			{
+				rb.AddForce(playerCamera.transform.right * (wallRunForce / 5) * Time.deltaTime);
+			}
+
+			if(wallLeft)
+			{
+				rb.AddForce(-playerCamera.transform.right * (wallRunForce / 5) * Time.deltaTime);
+			}
+		}
+	}
+
+	private void StopWallRun()
+	{
+		rb.useGravity = true;
+		isWallRunning = false;
+	}
+
+	private void CheckForWall()
+	{
+		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, 1.0f, isWall);
+		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.forward, 1.0f, isWall);
+
+		if(!wallRight && !wallLeft)
+		{
+			StopWallRun();
+		}
+
+		if(wallLeft || wallRight)
+		{
+			isGrounded = false;
 		}
 	}
 

@@ -220,7 +220,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 191
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -391,6 +391,12 @@ MonoBehaviour:
   playerCamera: {fileID: 4914056158008327281}
   lookXLimit: 90
   gravity: -19.62
+  isWall:
+    serializedVersion: 2
+    m_Bits: 128
+  wallRunForce: 3000
+  maxWallRunTime: 2
+  maxWallRunSpeed: 30
 --- !u!1 &8774306084014741639
 GameObject:
   m_ObjectHideFlags: 0
