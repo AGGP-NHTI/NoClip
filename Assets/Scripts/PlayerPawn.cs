@@ -129,7 +129,7 @@ public class PlayerPawn : Pawn
 		isWallRunning = true;
 		isGrounded = true;
 
-		playerCamera.transform.rotation.z = Quaternion.;
+		//playerCamera.transform.rotation.z = Quaternion.;
 
 		CC.Move(transform.forward * wallRunForce * Time.deltaTime);
 	}
