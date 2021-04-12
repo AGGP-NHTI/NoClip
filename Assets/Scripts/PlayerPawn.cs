@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class PlayerPawn : Pawn
 {
-	Rigidbody rb;
-	public float moveSpeed = 5;	// Movement Speed
-	public float lookSpeed = 5;	// Mouse Sensitivity
-	public float jumpHeight = 2f; // Generic Jump Height
-	public GameObject ProjectileSpawn;
-	public float speed;
-
+	[Header("References")]
 	//This is the CharacterController Component --- NOT A SCRIPT
 	public CharacterController CC;
 	public Camera playerCamera;
-	Vector3 velocity;
+	public GameObject ProjectileSpawn;
+	Rigidbody rb;
+
+	[Header("Movement")]
+	public float moveSpeed = 5;	// Movement Speed
+	public float lookSpeed = 5;	// Mouse Sensitivity
+	public float jumpHeight = 2f; // Generic Jump Height
 	public float lookXLimit = 90.0f; //	The max angle for looking up and down - 90f is directly up and down
 	private float rotationX = 0f;
 	public float gravity = -9.81f;  // The speed in which the pawn will fall
+	float CameraVerticalAngle;
+	public bool holdJump = false;
+
+	public float speed;
+
+	Vector3 velocity;
 
 	//Wallrun components
 	public LayerMask isWall;
@@ -53,7 +59,14 @@ public class PlayerPawn : Pawn
 		rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
 		rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);	//Set max angle for looking up and down
 		playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);	//Rotate Player along X 
-		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);	//Rotate Camera along Y
+		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
+
+		//vertical camera rotation
+		{
+			CameraVerticalAngle = rotationX * lookSpeed;
+
+			playerCamera.transform.localEulerAngles = new Vector3(rotationX, 0, 0);
+		}
 	}
 
 	public override void Move(float x, float z)
@@ -80,6 +93,15 @@ public class PlayerPawn : Pawn
 
 	public override void Jump()
 	{
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			holdJump = true;
+		}
+		else
+		{
+			holdJump = false;
+		}
+
 		if (isGrounded)
 		{
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
