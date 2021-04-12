@@ -7,13 +7,13 @@ using TMPro;
 public class MinimapController : MonoBehaviour
 {
 	public bool exactPosition = false;
-	public PlayerPawn Player;
 	public List<GameObject> objectsOnRadar;
 	public List<GameObject> RadarNotches;
-	public int maxCheckDistance;
-	public int minCheckDistance;
+	public int maxCheckDistance = 15;
+	public int minCheckDistance = 5;
 
-	public Transform Target;
+	PlayerPawn Player;
+	Transform Target;
 
 	public float distanceToTarget;
 
@@ -113,11 +113,17 @@ public class MinimapController : MonoBehaviour
 								RadarNotches[1].SetActive(true);
 							}
 
-							//Back
-							if (angle > 157.5 || angle < -157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							//Left Back
+							if (angle > 157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
 							{
 								RadarNotches[2].SetActive(true);
 							}
+							//Right Back
+							else if (angle < -157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							{
+								RadarNotches[2].SetActive(true);
+							}
+
 
 							//Left
 							if (angle > 67.5 && angle < 112.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
