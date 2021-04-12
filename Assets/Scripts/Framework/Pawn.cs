@@ -17,17 +17,6 @@ public class Pawn : Actor
 	protected float groundDistance = 0.4f;
 	public LayerMask groundMask;
 	protected bool isGrounded;
-	public Vector3 velocity;
-
-	public void Update()
-	{
-		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-		if (isGrounded && velocity.y < 0)
-		{
-			velocity.y = -2f;
-		}
-	}
 
 	/// <summary>
 	/// Controler who is in charge of this object. 

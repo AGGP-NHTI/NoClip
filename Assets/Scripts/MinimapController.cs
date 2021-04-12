@@ -13,7 +13,7 @@ public class MinimapController : MonoBehaviour
 	public int maxCheckDistance;
 	public int minCheckDistance;
 
-	Transform Target;
+	public Transform Target;
 
 	public float distanceToTarget;
 
@@ -32,7 +32,7 @@ public class MinimapController : MonoBehaviour
 			else if (exactPosition == false)
 			{
 				exactPosition = true;
-			}			
+			}
 		}
 
 		//Clear list to update objects that can be rendered - for when enemies die or spawn
@@ -40,15 +40,15 @@ public class MinimapController : MonoBehaviour
 		List<GameObject> Radar = new List<GameObject>(objectsOnRadar);
 
 		Radar.AddRange(GameObject.FindGameObjectsWithTag("render_on_radar"));
-		
+
 		//Used for displaying items in the list in the editor
 		objectsOnRadar = Radar;
 
 		//Add objects to list
 		foreach (GameObject notch in RadarNotches)
 		{
-			Image nothcImage = notch.GetComponent<Image>();
-			nothcImage.color = new Color(255, 255, 255, 0);
+			//Image nothcImage = notch.GetComponent<Image>();
+			//nothcImage.color = new Color(255, 255, 255, 0);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class MinimapController : MonoBehaviour
 					{
 						//Turn of sprite for exact position
 						pawn.GetComponent<SpriteRenderer>().enabled = false;
-						
+
 						//Get parent transform of pawn target object
 						Target = pawn.GetComponentInParent<Transform>().parent;
 
@@ -113,28 +113,28 @@ public class MinimapController : MonoBehaviour
 								RadarNotches[1].SetActive(true);
 							}
 
-							//Front-Left
-							if (angle > 22.5 && angle < 67.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							//Back
+							if (angle > 157.5 || angle < -157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
 							{
-								RadarNotches[5].SetActive(true);
+								RadarNotches[2].SetActive(true);
 							}
 
 							//Left
 							if (angle > 67.5 && angle < 112.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
 							{
 								RadarNotches[3].SetActive(true);
+							}	
+
+							//Right
+							if (angle < -67.5 && angle > -112.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							{
+								RadarNotches[4].SetActive(true);
 							}
 
-							//Back-Left
-							if (angle > 112.5 && angle < 157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							//Front-Left
+							if (angle > 22.5 && angle < 67.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
 							{
-								RadarNotches[7].SetActive(true);
-							}
-
-							//Back
-							if (angle > 157.5 || angle < -157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
-							{
-								RadarNotches[2].SetActive(true);
+								RadarNotches[5].SetActive(true);
 							}
 
 							//Front-Right
@@ -143,10 +143,10 @@ public class MinimapController : MonoBehaviour
 								RadarNotches[6].SetActive(true);
 							}
 
-							//Right
-							if (angle < -67.5 && angle > -112.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
+							//Back-Left
+							if (angle > 112.5 && angle < 157.5 && distanceToTarget < maxCheckDistance && distanceToTarget > minCheckDistance)
 							{
-								RadarNotches[4].SetActive(true);
+								RadarNotches[7].SetActive(true);
 							}
 
 							//Back-Right
