@@ -9,6 +9,7 @@ public class PlayerPawn : Pawn
 	public float lookSpeed = 5;	// Mouse Sensitivity
 	public float jumpHeight = 2f; // Generic Jump Height
 	public GameObject ProjectileSpawn;
+	public float speed;
 
 	//This is the CharacterController Component --- NOT A SCRIPT
 	public CharacterController CC;
@@ -20,7 +21,7 @@ public class PlayerPawn : Pawn
 
 	//Wallrun components
 	public LayerMask isWall;
-	public float wallRunForce, maxWallRunTime, maxWallRunSpeed;
+	public float wallRunForce, maxWallRunTime, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
 	bool wallRight, wallLeft, isWallRunning;
 
 	void Awake()
@@ -65,8 +66,16 @@ public class PlayerPawn : Pawn
 		CC.Move(move * moveSpeed * Time.deltaTime);
 
 		//For Falling
-		velocity.y += gravity * Time.deltaTime;
-		CC.Move(velocity * Time.deltaTime);
+		if(!isWallRunning)
+		{
+			velocity.y += gravity * Time.deltaTime;
+			CC.Move(velocity * Time.deltaTime);
+		}
+		if(isWallRunning)
+		{
+			velocity.y += -2 * Time.deltaTime;
+			CC.Move(velocity * Time.deltaTime);
+		}
 	}
 
 	public override void Jump()
@@ -76,30 +85,30 @@ public class PlayerPawn : Pawn
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 		}
 
-		if(isWallRunning)
+		/*if(isWallRunning)
 		{
-			if((wallLeft && !Input.GetKey(KeyCode.D)) || (wallLeft && !Input.GetKey(KeyCode.A)))
+			if((wallLeft && !Input.GetKey(KeyCode.D)) || (wallRight && !Input.GetKey(KeyCode.A)))
 			{
-				velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+				CC.Move(transform.up * jumpForce);
 			}
 
 			if(wallRight || wallLeft && Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
 			{
-				rb.AddForce(-Vector3.up * jumpHeight * 3.2f);
+				CC.Move(-transform.up * jumpForce);
 			}
 
 			if(wallRight && Input.GetKey(KeyCode.A))
 			{
-				rb.AddForce(Vector3.left * jumpHeight * 3.2f);
+				CC.Move(-transform.right * jumpForce);
 			}
 
 			if (wallLeft && Input.GetKey(KeyCode.D))
 			{
-				rb.AddForce(Vector3.right * jumpHeight * 3.2f);
+				CC.Move(transform.right * jumpForce);
 			}
 
-			rb.AddForce(Vector3.forward * jumpHeight);
-		}
+			CC.Move(transform.forward * jumpForce);
+		}*/
 	}
 
 	private void WallRunInput()
@@ -117,44 +126,27 @@ public class PlayerPawn : Pawn
 
 	private void StartWallRun()
 	{
-		rb.useGravity = false;
 		isWallRunning = true;
+		isGrounded = true;
 
-		if(rb.velocity.magnitude <= maxWallRunSpeed)
-		{
-			rb.AddForce(playerCamera.transform.forward * wallRunForce * Time.deltaTime);
+		playerCamera.transform.rotation.z = Quaternion.;
 
-			if(wallRight)
-			{
-				rb.AddForce(playerCamera.transform.right * (wallRunForce / 5) * Time.deltaTime);
-			}
-
-			if(wallLeft)
-			{
-				rb.AddForce(-playerCamera.transform.right * (wallRunForce / 5) * Time.deltaTime);
-			}
-		}
+		CC.Move(transform.forward * wallRunForce * Time.deltaTime);
 	}
 
 	private void StopWallRun()
 	{
-		rb.useGravity = true;
 		isWallRunning = false;
 	}
 
 	private void CheckForWall()
 	{
-		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, 1.0f, isWall);
-		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.forward, 1.0f, isWall);
+		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.right, checkDist, isWall);
+		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.right, checkDist, isWall);
 
 		if(!wallRight && !wallLeft)
 		{
 			StopWallRun();
-		}
-
-		if(wallLeft || wallRight)
-		{
-			isGrounded = false;
 		}
 	}
 
