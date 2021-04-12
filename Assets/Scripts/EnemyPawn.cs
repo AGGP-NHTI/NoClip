@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class EnemyPawn : Pawn
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Rigidbody rb;
 
-    // Update is called once per frame
-    void Update()
+    void Awake()
     {
-        
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 }
