@@ -4,19 +4,31 @@ using UnityEngine;
 
 public class PlayerPawn : Pawn
 {
-	Rigidbody rb;
-	public float moveSpeed = 5;	// Movement Speed
-	public float lookSpeed = 5;	// Mouse Sensitivity
-	public float jumpHeight = 2f; // Generic Jump Height
-	public GameObject ProjectileSpawn;
-
+	[Header("References")]
 	//This is the CharacterController Component --- NOT A SCRIPT
 	public CharacterController CC;
 	public Camera playerCamera;
-	Vector3 velocity;
+	public GameObject ProjectileSpawn;
+	Rigidbody rb;
+
+	[Header("Movement")]
+	public float moveSpeed = 5;	// Movement Speed
+	public float lookSpeed = 5;	// Mouse Sensitivity
+	public float jumpHeight = 2f; // Generic Jump Height
 	public float lookXLimit = 90.0f; //	The max angle for looking up and down - 90f is directly up and down
 	private float rotationX = 0f;
-	public float gravity = -9.81f;	// The speed in which the pawn will fall
+	public float gravity = -9.81f;  // The speed in which the pawn will fall
+	float CameraVerticalAngle;
+	public bool holdJump = false;
+
+	public float speed;
+
+	Vector3 velocity;
+
+	//Wallrun components
+	public LayerMask isWall;
+	public float wallRunForce, maxWallRunTime, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
+	bool wallRight, wallLeft, isWallRunning;
 
 	void Awake()
 	{
@@ -37,6 +49,9 @@ public class PlayerPawn : Pawn
 		{
 			velocity.y = -2f;
 		}
+
+		CheckForWall();
+		WallRunInput();
 	}
 
 	public override void Look()
@@ -44,7 +59,14 @@ public class PlayerPawn : Pawn
 		rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
 		rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);	//Set max angle for looking up and down
 		playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);	//Rotate Player along X 
-		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);	//Rotate Camera along Y
+		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
+
+		//vertical camera rotation
+		{
+			CameraVerticalAngle = rotationX * lookSpeed;
+
+			playerCamera.transform.localEulerAngles = new Vector3(rotationX, 0, 0);
+		}
 	}
 
 	public override void Move(float x, float z)
@@ -57,15 +79,96 @@ public class PlayerPawn : Pawn
 		CC.Move(move * moveSpeed * Time.deltaTime);
 
 		//For Falling
-		velocity.y += gravity * Time.deltaTime;
-		CC.Move(velocity * Time.deltaTime);
+		if(!isWallRunning)
+		{
+			velocity.y += gravity * Time.deltaTime;
+			CC.Move(velocity * Time.deltaTime);
+		}
+		if(isWallRunning)
+		{
+			velocity.y += -2 * Time.deltaTime;
+			CC.Move(velocity * Time.deltaTime);
+		}
 	}
 
 	public override void Jump()
 	{
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			holdJump = true;
+		}
+		else
+		{
+			holdJump = false;
+		}
+
 		if (isGrounded)
 		{
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+		}
+
+		/*if(isWallRunning)
+		{
+			if((wallLeft && !Input.GetKey(KeyCode.D)) || (wallRight && !Input.GetKey(KeyCode.A)))
+			{
+				CC.Move(transform.up * jumpForce);
+			}
+
+			if(wallRight || wallLeft && Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+			{
+				CC.Move(-transform.up * jumpForce);
+			}
+
+			if(wallRight && Input.GetKey(KeyCode.A))
+			{
+				CC.Move(-transform.right * jumpForce);
+			}
+
+			if (wallLeft && Input.GetKey(KeyCode.D))
+			{
+				CC.Move(transform.right * jumpForce);
+			}
+
+			CC.Move(transform.forward * jumpForce);
+		}*/
+	}
+
+	private void WallRunInput()
+	{
+		if(Input.GetKey(KeyCode.D) && wallRight)
+		{
+			StartWallRun();
+		}
+
+		if (Input.GetKey(KeyCode.A) && wallLeft)
+		{
+			StartWallRun();
+		}
+	}
+
+	private void StartWallRun()
+	{
+		isWallRunning = true;
+		isGrounded = true;
+
+		//playerCamera.transform.rotation.z = Quaternion.;
+
+		CC.Move(transform.forward * wallRunForce * Time.deltaTime);
+	}
+
+	private void StopWallRun()
+	{
+		isWallRunning = false;
+	}
+
+	private void CheckForWall()
+	{
+		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.right, checkDist, isWall);
+		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.right, checkDist, isWall);
+
+		if(!wallRight && !wallLeft)
+		{
+			StopWallRun();
 		}
 	}
 

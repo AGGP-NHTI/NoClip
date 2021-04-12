@@ -214,19 +214,19 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 191
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
+  m_HDR: 0
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -254,9 +254,10 @@ GameObject:
   - component: {fileID: 7133955355595793966}
   - component: {fileID: 2384960829282638791}
   - component: {fileID: 4914056158673950253}
+  - component: {fileID: 5679792113527591944}
   m_Layer: 0
   m_Name: Player Pawn
-  m_TagString: Untagged
+  m_TagString: render_on_radar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,7 +270,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4914056158673950251}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.68534, y: 1.39, z: 15.005834}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4914056158008327286}
@@ -306,7 +307,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d7cf09b1008984f4fa14834248a88ab6, type: 2}
+  - {fileID: 2100000, guid: d661d17f6a6ca2b4f9850023d1f14df3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -383,14 +384,48 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
+  velocity: {x: 0, y: 0, z: 0}
+  CC: {fileID: 2384960829282638791}
+  playerCamera: {fileID: 4914056158008327281}
+  ProjectileSpawn: {fileID: 0}
   moveSpeed: 5
   lookSpeed: 5
   jumpHeight: 2
+<<<<<<< HEAD
+  lookXLimit: 90
+  gravity: -30
+  holdJump: 0
+--- !u!135 &5679792113527591944
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4914056158673950251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
+=======
   ProjectileSpawn: {fileID: 0}
+  speed: 0
   CC: {fileID: 2384960829282638791}
   playerCamera: {fileID: 4914056158008327281}
   lookXLimit: 90
-  gravity: -19.62
+  gravity: -9.8
+  isWall:
+    serializedVersion: 2
+    m_Bits: 128
+  wallRunForce: 7
+  maxWallRunTime: 2
+  maxWallRunSpeed: 1000
+  jumpForce: 5
+  checkDist: 1
+  wallRunCamTilt: 0
+  maxCamTilt: 20
+>>>>>>> 0d8b3d80b916494d58a2a6ecf313bacbb059ef5e
 --- !u!1 &8774306084014741639
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +516,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe1f427950b3b3346bc35d0adaf3ef8f, type: 2}
+  - {fileID: 2100000, guid: 0a2609bc0598c8f45ab48a8ccee6c571, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
