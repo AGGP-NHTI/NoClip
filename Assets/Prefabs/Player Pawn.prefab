@@ -387,16 +387,21 @@ MonoBehaviour:
   lookSpeed: 5
   jumpHeight: 2
   ProjectileSpawn: {fileID: 0}
+  speed: 0
   CC: {fileID: 2384960829282638791}
   playerCamera: {fileID: 4914056158008327281}
   lookXLimit: 90
-  gravity: -19.62
+  gravity: -9.8
   isWall:
     serializedVersion: 2
     m_Bits: 128
-  wallRunForce: 3000
+  wallRunForce: 7
   maxWallRunTime: 2
-  maxWallRunSpeed: 30
+  maxWallRunSpeed: 1000
+  jumpForce: 5
+  checkDist: 1
+  wallRunCamTilt: 0
+  maxCamTilt: 20
 --- !u!1 &8774306084014741639
 GameObject:
   m_ObjectHideFlags: 0
