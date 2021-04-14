@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Scripts/HUD/HudReferences.cs.meta
 guid: 338c0440b916ebb4c8253a7412abf03b
+=======
+<<<<<<< Updated upstream
+guid: aeb10d3f17025ec42beb88e60dc24259
+=======
+guid: 4b71081c2c39d754d9ff1aa73788b3df
+>>>>>>> Stashed changes
+>>>>>>> Local:Assets/Scripts/Turret.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
