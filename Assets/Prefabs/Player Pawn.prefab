@@ -392,6 +392,7 @@ MonoBehaviour:
   playerCamera: {fileID: 4914056158008327281}
   lookXLimit: 90
   gravity: -9.8
+  wallGrav: -2
   isWall:
     serializedVersion: 2
     m_Bits: 128
@@ -399,9 +400,12 @@ MonoBehaviour:
   maxWallRunTime: 2
   maxWallRunSpeed: 1000
   jumpForce: 5
-  checkDist: 1
+  checkDist: 0.1
   wallRunCamTilt: 0
   maxCamTilt: 20
+  gr: 0
+  left: 0
+  right: 0
 --- !u!1 &8774306084014741639
 GameObject:
   m_ObjectHideFlags: 0
