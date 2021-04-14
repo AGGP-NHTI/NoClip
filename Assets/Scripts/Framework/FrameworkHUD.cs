@@ -25,8 +25,10 @@ public class FrameworkHUD : Actor
 	private float warningTextColorSwap = 0f;
 	public float swapWarningTextColor = 0.25f;
 	public float resetWarningTextColor = 0.5f;
-	public Color baseColor;
-	public Color changeColor;
+	public Color warningBaseColor;
+	public Color warningChangeColor;
+	public Color healthBaseColor;
+	public Color timerBaseColor;
 
 	public void Start()
 	{
@@ -110,29 +112,33 @@ public class FrameworkHUD : Actor
 				//For displaying a warning when the player is under 10 seconds worth of health
 				if (playerPawn.Health <= 10f)
 				{
-					hr.HealthWarningText.gameObject.SetActive(true);
-					hr.HealthWarningSymbol.gameObject.SetActive(true);
-
 					warningTextColorSwap += Time.deltaTime;
 
 					if (warningTextColorSwap > swapWarningTextColor && warningTextColorSwap < resetWarningTextColor)
 					{
-						hr.HealthWarningText.color = baseColor;
-						hr.HealthWarningSymbol.color = baseColor;
+						hr.HealthWarningSymbol.gameObject.SetActive(true);
+
+						hr.HealthWarningSymbol.color = warningBaseColor;
+						hr.HealthTimer.color = warningBaseColor;
+						hr.HealthBars[0].color = warningBaseColor;
+						hr.HealthBars[1].color = warningBaseColor;
 					}
 					else if (warningTextColorSwap > resetWarningTextColor)
 					{
-						hr.HealthWarningText.color = changeColor;
-						hr.HealthWarningSymbol.color = changeColor;
+						hr.HealthWarningSymbol.color = warningChangeColor;
+						hr.HealthTimer.color = warningChangeColor;
+						hr.HealthBars[0].color = warningChangeColor;
+						hr.HealthBars[1].color = warningChangeColor;
 						warningTextColorSwap = 0f;
 					}
 				}
 				else
 				{
-					hr.HealthWarningText.color = baseColor;
-					hr.HealthWarningSymbol.color = baseColor;
+					hr.HealthBars[0].color = healthBaseColor;
+					hr.HealthBars[1].color = healthBaseColor;
+					hr.HealthTimer.color = timerBaseColor;
+					hr.HealthWarningSymbol.color = warningBaseColor;
 					warningTextColorSwap = 0f;
-					hr.HealthWarningText.gameObject.SetActive(false);
 					hr.HealthWarningSymbol.gameObject.SetActive(false);
 				}
 			}

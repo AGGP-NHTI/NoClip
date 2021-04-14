@@ -9,6 +9,5 @@ public class HudReferences : MonoBehaviour
 	public List<GameObject> RadarNotches;
 	public List<Image> HealthBars;
 	public TextMeshProUGUI HealthTimer;
-	public TextMeshProUGUI HealthWarningText;
 	public Image HealthWarningSymbol;
 }

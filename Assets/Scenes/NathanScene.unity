@@ -766,8 +766,10 @@ MonoBehaviour:
   controller: {fileID: 1783062239}
   swapWarningTextColor: 0.25
   resetWarningTextColor: 0.5
-  baseColor: {r: 1, g: 0, b: 0, a: 1}
-  changeColor: {r: 0.78431374, g: 0, b: 0.16078432, a: 1}
+  warningBaseColor: {r: 1, g: 0, b: 0, a: 1}
+  warningChangeColor: {r: 0.78431374, g: 0, b: 0.16078432, a: 1}
+  healthBaseColor: {r: 0, g: 0.59607846, b: 1, a: 1}
+  timerBaseColor: {r: 0.46666667, g: 0.60784316, b: 1, a: 1}
 --- !u!1 &1866046423
 GameObject:
   m_ObjectHideFlags: 0
