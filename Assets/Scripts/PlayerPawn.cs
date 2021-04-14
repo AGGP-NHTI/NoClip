@@ -41,6 +41,17 @@ public class PlayerPawn : Pawn
 
 	void Update()
 	{
+		Health -= Time.deltaTime;
+
+		if (Health <= 0)
+		{
+			Health = 0;
+		}
+		if (Health > StartingHealth)
+		{
+			Health = StartingHealth;
+		}
+
 		// Detect if player is on ground
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 

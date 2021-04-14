@@ -743,7 +743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e895cf8f57983d242a8c18b4b45571f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exactPosition: 1
+  exactPosition: 0
   objectsOnRadar: []
   RadarNotches: []
   maxCheckDistance: 15
@@ -762,12 +762,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IgnoresDamage: 1
-  LogDamageEvents: 0
+  LogDamageEvents: 1
   controller: {fileID: 1783062239}
   swapWarningTextColor: 0.25
   resetWarningTextColor: 0.5
   baseColor: {r: 1, g: 0, b: 0, a: 1}
-  changeColor: {r: 0.78431374, g: 0, b: 0.08235294, a: 1}
+  changeColor: {r: 0.78431374, g: 0, b: 0.16078432, a: 1}
 --- !u!1 &1866046423
 GameObject:
   m_ObjectHideFlags: 0

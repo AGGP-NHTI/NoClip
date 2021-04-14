@@ -99,7 +99,8 @@ public class MinimapController : MonoBehaviour
 						//Get distance to target
 						distanceToTarget = Vector3.Distance(Target.position, Player.gameObject.transform.position);
 
-						//Activate Radar Notches
+						//Activate Radar Notches if there are any
+						if (RadarNotches.Count != 0)
 						{
 							//Ontop
 							if (distanceToTarget < minCheckDistance)
@@ -172,7 +173,10 @@ public class MinimapController : MonoBehaviour
 		//Deactivate Radar Notches
 		foreach (GameObject notch in RadarNotches)
 		{
-			notch.SetActive(false);
+			if (RadarNotches.Count != 0)
+			{
+				notch.SetActive(false);
+			}
 		}
 	}
 }

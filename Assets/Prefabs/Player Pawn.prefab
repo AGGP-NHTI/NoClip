@@ -378,7 +378,7 @@ MonoBehaviour:
   LogDamageEvents: 1
   StartingHealth: 100
   Health: 100
-  IsSpectator: 1
+  IsSpectator: 0
   groundCheck: {fileID: 1322670550552564136}
   groundMask:
     serializedVersion: 2
