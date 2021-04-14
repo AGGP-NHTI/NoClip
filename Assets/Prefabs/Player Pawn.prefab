@@ -212,7 +212,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.08
   far clip plane: 1000
   field of view: 75
   orthographic: 0
@@ -391,21 +391,18 @@ MonoBehaviour:
   CC: {fileID: 2384960829282638791}
   playerCamera: {fileID: 4914056158008327281}
   lookXLimit: 90
-  gravity: -9.8
+  gravity: -20
   wallGrav: -2
   isWall:
     serializedVersion: 2
     m_Bits: 128
   wallRunForce: 7
-  maxWallRunTime: 2
+  maxWallRunTime: 1.5
   maxWallRunSpeed: 1000
   jumpForce: 5
-  checkDist: 0.1
+  checkDist: 0.75
   wallRunCamTilt: 0
-  maxCamTilt: 20
-  gr: 0
-  left: 0
-  right: 0
+  maxCamTilt: 15
 --- !u!1 &8774306084014741639
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,10 +25,6 @@ public class PlayerPawn : Pawn
 	public float wallRunForce, maxWallRunTime, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
 	bool wallRight, wallLeft, isWallRunning;
 
-	public bool gr;
-	public bool left;
-	public bool right;
-
 	void Awake()
 	{
 		rb = gameObject.GetComponent<Rigidbody>();
@@ -60,10 +56,6 @@ public class PlayerPawn : Pawn
 			velocity.y = -2f;
 		}
 
-		gr = isGrounded;
-		left = wallLeft;
-		right = wallRight;
-
 		CheckForWall();
 		WallRunInput();
 	}
@@ -73,7 +65,35 @@ public class PlayerPawn : Pawn
 		rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
 		rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);	//Set max angle for looking up and down
 		playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);	//Rotate Player along X 
-		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);	//Rotate Camera along Y
+		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
+
+		if (wallRight)
+		{
+			if (Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
+			{
+				wallRunCamTilt += Time.deltaTime * maxCamTilt * 2;
+			}
+		}
+
+		if (wallLeft)
+		{
+			if (Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
+			{
+				wallRunCamTilt -= Time.deltaTime * maxCamTilt * 2;
+			}
+		}
+
+		if (!wallRight && !wallLeft && wallRunCamTilt > 0)
+		{
+			wallRunCamTilt = 0.0f;
+			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
+		}
+
+		if (!wallRight && !wallLeft && wallRunCamTilt < 0)
+		{
+			wallRunCamTilt = 0.0f;
+			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
+		}
 	}
 
 	public override void Move(float x, float z)
@@ -149,21 +169,7 @@ public class PlayerPawn : Pawn
 		isWallRunning = true;
 		isGrounded = true;
 
-		if(wallRight && isWallRunning)
-		{
-			if(Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
-			{
-				wallRunCamTilt += Time.deltaTime * maxCamTilt * 2;
-			}
-		}
-
-		if (wallLeft && isWallRunning)
-		{
-			if (Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
-			{
-				wallRunCamTilt -= Time.deltaTime * maxCamTilt * 2;
-			}
-		}
+		
 
 		playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
 		CC.Move(transform.forward * wallRunForce * Time.deltaTime);
@@ -179,26 +185,9 @@ public class PlayerPawn : Pawn
 		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.right, checkDist, isWall);
 		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.right, checkDist, isWall);
 
-		if(!wallRight)
+		if(!wallLeft && !wallRight)
 		{
 			StopWallRun();
-
-			if (wallRunCamTilt > 0 && (!isWallRunning || isGrounded))
-			{
-				wallRunCamTilt -= Time.deltaTime * maxCamTilt * 2;
-				playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
-			}
-		}
-
-		if(!wallLeft)
-		{
-			StopWallRun();
-
-			if (wallRunCamTilt < 0 && (!isWallRunning || isGrounded))
-			{
-				wallRunCamTilt += Time.deltaTime * maxCamTilt * 2;
-				playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
-			}
 		}
 	}
 
