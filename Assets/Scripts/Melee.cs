@@ -29,7 +29,7 @@ public class Melee : EnemyPawn
 
     public void RayHit()
     {
-        if (Physics.Raycast(raycast, out hit))
+      /*  if (Physics.Raycast(raycast, out hit))
         {
             Debug.Log("Raycast: " + hit.collider.gameObject.name);
 
@@ -46,14 +46,14 @@ public class Melee : EnemyPawn
                 canMove = true;
                 speed = 10;
             }
-        }
+        }*/
     }
 
     public void DebugRay()
     {
-        raycast.origin = this.transform.position;
-        raycast.direction = this.transform.forward;
+      //  raycast.origin = this.transform.position;
+      //  raycast.direction = this.transform.forward;
 
-        Debug.DrawRay(raycast.origin, raycast.direction * 100, Color.red);
+       // Debug.DrawRay(raycast.origin, raycast.direction * 100, Color.red);
     }
 }

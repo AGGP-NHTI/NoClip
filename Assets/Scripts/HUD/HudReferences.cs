@@ -10,4 +10,6 @@ public class HudReferences : MonoBehaviour
 	public List<Image> HealthBars;
 	public TextMeshProUGUI HealthTimer;
 	public Image HealthWarningSymbol;
+	public Image HealthBarBackground;
+	public Image HealthBarBoarder;
 }

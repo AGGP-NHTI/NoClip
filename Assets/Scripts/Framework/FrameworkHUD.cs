@@ -25,10 +25,12 @@ public class FrameworkHUD : Actor
 	private float warningTextColorSwap = 0f;
 	public float swapWarningTextColor = 0.25f;
 	public float resetWarningTextColor = 0.5f;
-	public Color warningBaseColor;
-	public Color warningChangeColor;
-	public Color healthBaseColor;
-	public Color timerBaseColor;
+	public Color warningBaseColor = new Color(255, 0, 0, 255);
+	public Color warningChangeColor = new Color(200, 0, 41, 255);
+	public Color healthBaseColor = new Color(0, 152, 255, 255);
+	public Color timerBaseColor = new Color(119, 155, 255, 255);
+	public Color healthBackgroundColor = new Color(107, 106, 250, 100);
+	public Color healthBoarderColor = new Color(25, 87, 255, 175);
 
 	public void Start()
 	{
@@ -99,6 +101,11 @@ public class FrameworkHUD : Actor
 			//To prevent not having an instance playerPawn error
 			if (playerPawn != null)
 			{
+				//Get and update Health colors
+				hr = currentPawnHUD.GetComponentInChildren<HudReferences>();
+				hr.HealthBarBackground.color = healthBackgroundColor;
+				hr.HealthBarBoarder.color = healthBoarderColor;
+
 				//Get a float for setting healthbar fill amount
 				float healthPercentage = playerPawn.Health / playerPawn.StartingHealth;
 

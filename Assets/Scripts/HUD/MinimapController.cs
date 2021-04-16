@@ -9,6 +9,7 @@ public class MinimapController : MonoBehaviour
 	public bool exactPosition = false;
 	public List<GameObject> objectsOnRadar;
 	public List<GameObject> RadarNotches;
+	public Color NotchColor;
 	public int maxCheckDistance = 15;
 	public int minCheckDistance = 5;
 
@@ -175,6 +176,9 @@ public class MinimapController : MonoBehaviour
 		{
 			if (RadarNotches.Count != 0)
 			{
+				Image notchImg = notch.GetComponent<Image>();
+
+				notchImg.color = NotchColor;
 				notch.SetActive(false);
 			}
 		}

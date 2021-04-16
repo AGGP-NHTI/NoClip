@@ -746,6 +746,7 @@ MonoBehaviour:
   exactPosition: 0
   objectsOnRadar: []
   RadarNotches: []
+  NotchColor: {r: 1, g: 0, b: 0, a: 0.78431374}
   maxCheckDistance: 15
   minCheckDistance: 5
   distanceToTarget: 0
@@ -770,6 +771,8 @@ MonoBehaviour:
   warningChangeColor: {r: 0.78431374, g: 0, b: 0.16078432, a: 1}
   healthBaseColor: {r: 0, g: 0.59607846, b: 1, a: 1}
   timerBaseColor: {r: 0.46666667, g: 0.60784316, b: 1, a: 1}
+  healthBackgroundColor: {r: 0.41960785, g: 0.41568628, b: 0.98039216, a: 0.39215687}
+  healthBoarderColor: {r: 0.09803922, g: 0.34117648, b: 1, a: 0.6862745}
 --- !u!1 &1866046423
 GameObject:
   m_ObjectHideFlags: 0
