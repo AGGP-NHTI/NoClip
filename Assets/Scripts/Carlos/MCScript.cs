@@ -9,11 +9,13 @@ public class MCScript : MonoBehaviour
     Vector3 startPos;
     Quaternion startRot;
 
-    bool forward, back, left, right, jump;
+    bool jump;
 
     public float speed = 20;
     public bool canJump = false;
     public float jumpForce = 5.0f;
+
+    public GameObject transCam;
 
     public float health, currentHealth, stamina, energy;
     void Start()
@@ -44,40 +46,21 @@ public class MCScript : MonoBehaviour
 
     void PlayerInput()
     {
-        forward = Input.GetKey(KeyCode.W);
-        back = Input.GetKey(KeyCode.S);
-        left = Input.GetKey(KeyCode.A);
-        right = Input.GetKey(KeyCode.D);
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        movement = transCam.transform.rotation * movement;
+
+        if (movement != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
+        }
+
+        transform.Translate(movement * speed * Time.deltaTime, Space.World);
+
         jump = Input.GetKeyDown(KeyCode.Space);
-
-        MoveForward(speed);
-        MoveRight(speed);
-    }
-
-    void MoveForward(float value)
-    {
-        if (forward)
-        {
-            transform.Translate(Vector3.forward * value * Time.deltaTime);
-        }
-
-        if (back)
-        {
-            transform.Translate(-Vector3.forward * value * Time.deltaTime);
-        }
-    }
-
-    void MoveRight(float value)
-    {
-        if (left)
-        {
-            transform.Translate(-Vector3.right * value * Time.deltaTime);
-        }
-
-        if (right)
-        {
-            transform.Translate(Vector3.right * value * Time.deltaTime);
-        }
     }
 
     void Jump()
@@ -88,7 +71,7 @@ public class MCScript : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Floor")
+        if (other.gameObject.tag == "Ground")
         {
             canJump = true;
         }
