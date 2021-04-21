@@ -154,6 +154,6 @@ public class Pawn : Actor
 
 	protected virtual void OnDeath()
 	{
-
+		Destroy(gameObject);
 	}
 }
