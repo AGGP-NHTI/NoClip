@@ -22,7 +22,7 @@ public class PlayerPawn : Pawn
 
 	//Wallrun components
 	public LayerMask isWall;
-	public float wallRunForce, maxWallRunTime, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
+	public float wallRunForce, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
 	bool wallRight, wallLeft, isWallRunning;
 
 	void Awake()
@@ -56,6 +56,12 @@ public class PlayerPawn : Pawn
 			velocity.y = -2f;
 		}
 
+		if(Input.GetKey(KeyCode.P))
+		{
+			Debug.Log("P");
+			CC.Move(transform.right * wallRunForce * Time.deltaTime);
+		}
+
 		CheckForWall();
 		WallRunInput();
 	}
@@ -67,29 +73,29 @@ public class PlayerPawn : Pawn
 		playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);	//Rotate Player along X 
 		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
 
-		if (wallRight)
+		if (wallRight && isWallRunning)
 		{
-			if (Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
+			if (Mathf.Abs(wallRunCamTilt) < maxCamTilt)
 			{
 				wallRunCamTilt += Time.deltaTime * maxCamTilt * 2;
 			}
 		}
 
-		if (wallLeft)
+		if (wallLeft && isWallRunning)
 		{
-			if (Mathf.Abs(wallRunCamTilt) <= maxCamTilt)
+			if (Mathf.Abs(wallRunCamTilt) < maxCamTilt)
 			{
 				wallRunCamTilt -= Time.deltaTime * maxCamTilt * 2;
 			}
 		}
 
-		if (!wallRight && !wallLeft && wallRunCamTilt > 0)
+		if (!isWallRunning && wallRunCamTilt > 0 && !isGrounded)
 		{
 			wallRunCamTilt = 0.0f;
 			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
 		}
 
-		if (!wallRight && !wallLeft && wallRunCamTilt < 0)
+		if (!isWallRunning && wallRunCamTilt < 0 && !isGrounded)
 		{
 			wallRunCamTilt = 0.0f;
 			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
@@ -125,29 +131,27 @@ public class PlayerPawn : Pawn
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 		}
 
-		/*if(isWallRunning)
+		/*if (isWallRunning)
 		{
-			if((wallLeft && !Input.GetKey(KeyCode.D)) || (wallRight && !Input.GetKey(KeyCode.A)))
+			if(wallLeft && !Input.GetKey(KeyCode.D) || (wallRight && !Input.GetKey(KeyCode.A)))
 			{
-				CC.Move(transform.up * jumpForce);
-			}
-
-			if(wallRight || wallLeft && Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-			{
-				CC.Move(-transform.up * jumpForce);
-			}
-
-			if(wallRight && Input.GetKey(KeyCode.A))
-			{
-				CC.Move(-transform.right * jumpForce);
+				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
+				CC.Move(transform.forward * (jumpForce / 5) * Time.deltaTime);
 			}
 
 			if (wallLeft && Input.GetKey(KeyCode.D))
 			{
-				CC.Move(transform.right * jumpForce);
+				StopWallRun();
+				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
+				CC.Move(transform.forward * jumpForce * Time.deltaTime);
 			}
 
-			CC.Move(transform.forward * jumpForce);
+			if (wallRight && Input.GetKey(KeyCode.A))
+			{
+				StopWallRun();
+				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
+				CC.Move(transform.forward * jumpForce * Time.deltaTime);
+			}
 		}*/
 	}
 
@@ -167,12 +171,18 @@ public class PlayerPawn : Pawn
 	private void StartWallRun()
 	{
 		isWallRunning = true;
-		isGrounded = true;
-
-		
 
 		playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
-		CC.Move(transform.forward * wallRunForce * Time.deltaTime);
+
+		if(wallRight)
+		{
+			CC.attachedRigidbody.AddForce(transform.right * wallRunForce * Time.deltaTime);
+		}
+
+		if(wallLeft)
+		{
+			CC.attachedRigidbody.AddForce(-transform.right * wallRunForce * Time.deltaTime);
+		}
 	}
 
 	private void StopWallRun()
