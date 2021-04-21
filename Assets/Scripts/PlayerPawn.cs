@@ -8,19 +8,31 @@ public class PlayerPawn : Pawn
 
 	[Header("Movement")]
 	public float moveSpeed = 5; // Movement Speed
-	public float lookSpeed = 5; // Mouse Sensitivity
+	public float verticalSensitivity = 3.0f;
+	public float horizontalSensitivity = 200.0f;
 	public float jumpHeight = 2f; // Generic Jump Height
-	public CharacterController CC; //This is the CharacterController Component --- NOT A SCRIPT
-	public Camera playerCamera;
-	public float lookXLimit = 90.0f; //	The max angle for looking up and down - 90f is directly up and down
-	private float rotationX = 0f;
+	//public CharacterController CC; //This is the CharacterController Component --- NOT A SCRIPT
+	public GameObject playerCamera;
 	public float gravity = -9.81f;  // The speed in which the pawn will fall
+	public float jumpForce = 300.0f;
+	public float jumpTime = 0.0f;
+	public float jumpTimeMax = 10.0f;
+	public float jumpTimeCount = 1.0f;
 	Rigidbody rb;
-	Vector3 velocity;
+	float minCamClamp = -89.9f;
+	float maxCamClamp = 89.9f;
+	float camPitch = 0.0f;
+	bool forwards = false;
+	bool backwards = false;
+	bool right = false;
+	bool left = false;
+	bool isJumping = false;
+	Vector2 leftStick = Vector2.zero;
+	Vector2 rightStick = Vector2.zero;
 
 	[Header("Wallrun")]
 	public LayerMask isWall;
-	public float wallRunForce, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
+	public float wallRunForce, checkDist;
 	bool wallRight, wallLeft, isWallRunning;
 	public float wallGrav = -2.0f;  // The speed in which the pawn will fall when wallrunning
 
@@ -41,7 +53,8 @@ public class PlayerPawn : Pawn
 	void Awake()
 	{
 		rb = gameObject.GetComponent<Rigidbody>();
-		rb.constraints = RigidbodyConstraints.FreezeRotation;
+		//rb.constraints = RigidbodyConstraints.FreezeRotation;
+		rb.useGravity = true;
 
 		// Lock cursor
 		Cursor.lockState = CursorLockMode.Locked;
@@ -51,55 +64,59 @@ public class PlayerPawn : Pawn
 	void Update()
 	{
 		Health -= Time.deltaTime;
+		rb.useGravity = false;
 
-		//Detect when player is at a percentage of their health, if true then play critical health sound
-		if (Health < (StartingHealth * warningLevel) && criticalHealth.isPlaying == false)
-		{
-			criticalHealth.Play();
-			healthCritical = true;
-		}
-		else if (Health > (StartingHealth * warningLevel) && healthCritical == true)
-		{
-			coreStabile.Play();
-			criticalHealth.Stop();
-			healthCritical = false;
-		}
-
-		if (Health < StartingHealth * criticalLevel && Health > (StartingHealth * criticalLevel) - 0.1)
-		{
-			coreCritical.Play();
-		}
-
-		if (Health < 0)
-		{
-			criticalHealth.Stop();
-			Health = 0;
-		}
-
-		if (Health > StartingHealth)
-		{
-			Health = StartingHealth;
-		}
+		HealthUpdate();
 
 		// Detect if player is on ground
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-		if(isGrounded && velocity.y < 0)
-		{
-			velocity.y = -2f;
-		}
+		GetInput();
 
-		if(Input.GetKey(KeyCode.P))
+		MoveStrafe(leftStick);
+		RotateRight(rightStick.x);
+		CameraPitch(rightStick.y);
+
+		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
 		{
-			Debug.Log("P");
-			CC.Move(transform.right * wallRunForce * Time.deltaTime);
+			isJumping = true;
+
+			Debug.Log("Jump!");
 		}
 
 		CheckForWall();
 		WallRunInput();
+
+		if(!isGrounded && !isWallRunning)
+		{
+			rb.useGravity = true;
+			Physics.gravity = new Vector3(0, gravity, 0);
+		}
+
+		if (!isGrounded && isWallRunning)
+		{
+			rb.useGravity = true;
+			Physics.gravity = new Vector3(0, wallGrav, 0);
+		}
 	}
 
-	public override void Look()
+	void FixedUpdate()
+	{
+		if(isJumping && (jumpTime < jumpTimeMax))
+		{
+			Jump();
+			jumpTime += jumpTimeCount;
+		}
+		
+		if(jumpTime >= jumpTimeMax)
+		{
+			jumpTime = 0.0f;
+			isJumping = false;
+		}
+	}
+
+	//Old Look/Jump/Movement Code Using CharacterController Component
+	/*public override void Look()
 	{
 		rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
 		rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);	//Set max angle for looking up and down
@@ -148,16 +165,16 @@ public class PlayerPawn : Pawn
 		if(!isWallRunning)
 		{
 			velocity.y += gravity * Time.deltaTime;
-			CC.Move(velocity * Time.deltaTime);
+			//CC.Move(velocity * Time.deltaTime);
 		}
 		if(isWallRunning)
 		{
 			velocity.y += wallGrav * Time.deltaTime;
-			CC.Move(velocity * Time.deltaTime);
+			//CC.Move(velocity * Time.deltaTime);
 		}
-	}
+	}*/
 
-	public override void Jump()
+	/*public override void Jump()
 	{
 		if (isGrounded)
 		{
@@ -185,7 +202,108 @@ public class PlayerPawn : Pawn
 				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
 				CC.Move(transform.forward * jumpForce * Time.deltaTime);
 			}
-		}*/
+		}
+	}*/
+
+
+	void HealthUpdate()
+	{
+		//Detect when player is at a percentage of their health, if true then play critical health sound
+		if (Health < (StartingHealth * warningLevel) && criticalHealth.isPlaying == false)
+		{
+			criticalHealth.Play();
+			healthCritical = true;
+		}
+		else if (Health > (StartingHealth * warningLevel) && healthCritical == true)
+		{
+			coreStabile.Play();
+			criticalHealth.Stop();
+			healthCritical = false;
+		}
+
+		if (Health < StartingHealth * criticalLevel && Health > (StartingHealth * criticalLevel) - 0.1)
+		{
+			coreCritical.Play();
+		}
+
+		if (Health < 0)
+		{
+			criticalHealth.Stop();
+			Health = 0;
+		}
+
+		if (Health > StartingHealth)
+		{
+			Health = StartingHealth;
+		}
+	}
+
+	//New Movement Using Rigidbody
+	void GetInput()
+	{
+		leftStick = Vector2.zero;
+		rightStick = Vector2.zero;
+		forwards = Input.GetKey(KeyCode.W);
+		backwards = Input.GetKey(KeyCode.S);
+		left = Input.GetKey(KeyCode.A);
+		right = Input.GetKey(KeyCode.D);
+
+		rightStick.x = Input.GetAxis("Mouse X");
+		rightStick.y = Input.GetAxis("Mouse Y");
+		KeyToAxis();
+	}
+
+	void KeyToAxis()
+	{
+		if (forwards)
+		{
+			leftStick.y = 1;
+		}
+		if (backwards)
+		{
+			leftStick.y = -1;
+		}
+		if (right)
+		{
+			leftStick.x = 1;
+		}
+		if (left)
+		{
+			leftStick.x = -1;
+		}
+	}
+
+	void MoveStrafe(Vector2 value)
+	{
+		MoveStrafe(value.x, value.y);
+	}
+
+	void MoveStrafe(float horizontal, float vertical)
+	{
+		rb.velocity = Vector3.zero;
+		rb.velocity += (gameObject.transform.forward * vertical * moveSpeed);
+		rb.velocity += (gameObject.transform.right * horizontal * moveSpeed);
+
+		//Will move faster if moving diagonally
+	}
+
+	public override void Jump()
+	{
+		rb.velocity = new Vector3(0, jumpForce, 0);
+	}
+
+	void CameraPitch(float value)
+    {
+        camPitch -= (value * verticalSensitivity);
+        camPitch = Mathf.Clamp(camPitch, minCamClamp, maxCamClamp);
+
+        playerCamera.transform.localRotation = Quaternion.Euler(camPitch, 0f, 0f);
+        //cameraObj.Rotate(Vector3.up * yRotation);
+    }
+
+	void RotateRight(float value)
+	{
+		gameObject.transform.Rotate(Vector3.up * value * Time.deltaTime * horizontalSensitivity);
 	}
 
 	private void WallRunInput()
@@ -205,16 +323,16 @@ public class PlayerPawn : Pawn
 	{
 		isWallRunning = true;
 
-		playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
+		rb.AddForce(gameObject.transform.forward * wallRunForce);
 
 		if(wallRight)
 		{
-			CC.attachedRigidbody.AddForce(transform.right * wallRunForce * Time.deltaTime);
+			rb.AddForce(gameObject.transform.right * wallRunForce / 5 * Time.deltaTime);
 		}
 
 		if(wallLeft)
 		{
-			CC.attachedRigidbody.AddForce(-transform.right * wallRunForce * Time.deltaTime);
+			rb.AddForce(-gameObject.transform.right * wallRunForce / 5 * Time.deltaTime);
 		}
 	}
 
