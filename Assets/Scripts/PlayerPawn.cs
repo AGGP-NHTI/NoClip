@@ -4,26 +4,39 @@ using UnityEngine;
 
 public class PlayerPawn : Pawn
 {
-	Rigidbody rb;
-	public float moveSpeed = 5;	// Movement Speed
-	public float lookSpeed = 5;	// Mouse Sensitivity
-	public float jumpHeight = 2f; // Generic Jump Height
 	public GameObject ProjectileSpawn;
-	public float speed;
 
-	//This is the CharacterController Component --- NOT A SCRIPT
-	public CharacterController CC;
+	[Header("Movement")]
+	public float moveSpeed = 5; // Movement Speed
+	public float lookSpeed = 5; // Mouse Sensitivity
+	public float jumpHeight = 2f; // Generic Jump Height
+	public CharacterController CC; //This is the CharacterController Component --- NOT A SCRIPT
 	public Camera playerCamera;
-	Vector3 velocity;
 	public float lookXLimit = 90.0f; //	The max angle for looking up and down - 90f is directly up and down
 	private float rotationX = 0f;
 	public float gravity = -9.81f;  // The speed in which the pawn will fall
-	public float wallGrav = -2.0f;
+	Rigidbody rb;
+	Vector3 velocity;
 
-	//Wallrun components
+	[Header("Wallrun")]
 	public LayerMask isWall;
 	public float wallRunForce, maxWallRunTime, maxWallRunSpeed, jumpForce, checkDist, wallRunCamTilt, maxCamTilt;
 	bool wallRight, wallLeft, isWallRunning;
+	public float wallGrav = -2.0f;  // The speed in which the pawn will fall when wallrunning
+
+	[Header("Health")]
+	public AudioSource criticalHealth;
+	public AudioSource coreStabile;
+	public AudioSource coreCritical;
+
+	[Tooltip("As Percentage of Max Health")]
+	[Range(0f, 1f)]
+	public float criticalLevel = 0.2f;
+
+	[Tooltip("As Percentage of Max Health")]
+	[Range(0f,1f)]
+	public float warningLevel = 0.1f;
+	bool healthCritical = false;
 
 	void Awake()
 	{
@@ -39,10 +52,30 @@ public class PlayerPawn : Pawn
 	{
 		Health -= Time.deltaTime;
 
-		if (Health <= 0)
+		//Detect when player is at a percentage of their health, if true then play critical health sound
+		if (Health < (StartingHealth * warningLevel) && criticalHealth.isPlaying == false)
 		{
+			criticalHealth.Play();
+			healthCritical = true;
+		}
+		else if (Health > (StartingHealth * warningLevel) && healthCritical == true)
+		{
+			coreStabile.Play();
+			criticalHealth.Stop();
+			healthCritical = false;
+		}
+
+		if (Health < StartingHealth * criticalLevel && Health > (StartingHealth * criticalLevel) - 0.1)
+		{
+			coreCritical.Play();
+		}
+
+		if (Health < 0)
+		{
+			criticalHealth.Stop();
 			Health = 0;
 		}
+
 		if (Health > StartingHealth)
 		{
 			Health = StartingHealth;
