@@ -34,7 +34,6 @@ public class PlayerPawn : Pawn
 	public LayerMask isWall;
 	public float wallRunForce, checkDist;
 	bool wallRight, wallLeft, isWallRunning;
-	public float wallGrav = -2.0f;  // The speed in which the pawn will fall when wallrunning
 
 	[Header("Health")]
 	public AudioSource criticalHealth;
@@ -77,26 +76,18 @@ public class PlayerPawn : Pawn
 		RotateRight(rightStick.x);
 		CameraPitch(rightStick.y);
 
-		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-		{
-			isJumping = true;
-
-			Debug.Log("Jump!");
-		}
-
 		CheckForWall();
 		WallRunInput();
 
-		if(!isGrounded && !isWallRunning)
+		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+		{
+			isJumping = true;
+		}
+
+		if (!isGrounded && !isWallRunning)
 		{
 			rb.useGravity = true;
 			Physics.gravity = new Vector3(0, gravity, 0);
-		}
-
-		if (!isGrounded && isWallRunning)
-		{
-			rb.useGravity = true;
-			Physics.gravity = new Vector3(0, wallGrav, 0);
 		}
 	}
 
@@ -289,7 +280,38 @@ public class PlayerPawn : Pawn
 
 	public override void Jump()
 	{
-		rb.velocity = new Vector3(0, jumpForce, 0);
+		if(!isWallRunning)
+		{
+			//rb.velocity = new Vector3(0, jumpForce, 0);
+			rb.AddForce(Vector3.up * jumpForce * 50);
+			rb.AddForce(Vector3.up * jumpForce * 50);
+		}
+		else
+		{
+			if ((wallLeft && !Input.GetKey(KeyCode.D)) || (wallRight && !Input.GetKey(KeyCode.A)))
+			{
+				Debug.Log("normal jump");
+				rb.AddForce(Vector2.up * jumpForce * 25);
+				rb.AddForce(Vector3.up * jumpForce * 25);
+			}
+
+			if (wallRight && Input.GetKey(KeyCode.A))
+			{
+				Debug.Log("right wall hop");
+				rb.AddForce(-transform.right * jumpForce * 250);
+				rb.AddForce(transform.forward * jumpForce * 150);
+			}
+
+			if (wallLeft && Input.GetKey(KeyCode.D))
+			{
+				Debug.Log("left wall hop");
+				rb.AddForce(transform.right * jumpForce * 250);
+				rb.AddForce(transform.forward * jumpForce * 150);
+			}
+
+			//Always add forward force
+			rb.AddForce(transform.forward * jumpForce * 100);
+		}
 	}
 
 	void CameraPitch(float value)
@@ -305,7 +327,7 @@ public class PlayerPawn : Pawn
 	{
 		gameObject.transform.Rotate(Vector3.up * value * Time.deltaTime * horizontalSensitivity);
 	}
-
+	
 	private void WallRunInput()
 	{
 		if(Input.GetKey(KeyCode.D) && wallRight && !isGrounded)
@@ -322,6 +344,7 @@ public class PlayerPawn : Pawn
 	private void StartWallRun()
 	{
 		isWallRunning = true;
+		isGrounded = true;
 
 		rb.AddForce(gameObject.transform.forward * wallRunForce);
 
@@ -329,8 +352,7 @@ public class PlayerPawn : Pawn
 		{
 			rb.AddForce(gameObject.transform.right * wallRunForce / 5 * Time.deltaTime);
 		}
-
-		if(wallLeft)
+		else
 		{
 			rb.AddForce(-gameObject.transform.right * wallRunForce / 5 * Time.deltaTime);
 		}

@@ -676,7 +676,7 @@ MonoBehaviour:
   horizontalSensitivity: 1000
   jumpHeight: 10
   playerCamera: {fileID: 4914056158008327283}
-  gravity: -300
+  gravity: -600
   jumpForce: 15
   jumpTime: 0
   jumpTimeMax: 15
@@ -686,7 +686,6 @@ MonoBehaviour:
     m_Bits: 128
   wallRunForce: 100
   checkDist: 1.5
-  wallGrav: -130
   criticalHealth: {fileID: 8469087761897317250}
   coreStabile: {fileID: 4036099791758274049}
   coreCritical: {fileID: 2717660591379660032}
