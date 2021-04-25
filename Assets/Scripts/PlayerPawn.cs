@@ -196,7 +196,6 @@ public class PlayerPawn : Pawn
 		}
 	}*/
 
-
 	void HealthUpdate()
 	{
 		//Detect when player is at a percentage of their health, if true then play critical health sound
