@@ -10,6 +10,8 @@ public class Actor : Info
     /// </summary>
     public bool IgnoresDamage = true;
 
+    public bool IgnoreStatus = true;
+
     /// <summary>
     /// Boolean. Controls if Damage Event Text is sent to Console
     /// </summary>
