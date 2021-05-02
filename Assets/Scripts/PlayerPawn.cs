@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerPawn : Pawn
 {
 	public GameObject ProjectileSpawn;
+	Game game;
+	public AudioSource audioSource;
 
 	[Header("Movement")]
 	public float verticalSensitivity = 3.0f;
@@ -12,6 +14,7 @@ public class PlayerPawn : Pawn
 	//public float jumpHeight = 2f; // Generic Jump Height
 	//public CharacterController CC; //This is the CharacterController Component --- NOT A SCRIPT
 	public GameObject playerCamera;
+	Camera cam;
 	public float gravity = -9.81f;  // The speed in which the pawn will fall
 	float currentGravity; // If pawn is in the air compound gravity to increase speed
 	float jumpForce;
@@ -64,6 +67,15 @@ public class PlayerPawn : Pawn
 	[Header("Radar")]
 	public bool exactPosition = false;
 
+	[Header("Attack")]
+	public AudioClip swingSound;
+	public float attackDamage;
+	public float attackRange;
+	public float attackCooldown;
+	float attackTimer;
+	public bool lastAttackWasMelee = false;
+	bool siphonActive = false;
+
 	public float getEnergy
 	{
 		get { return energyMultiplier; }
@@ -72,9 +84,11 @@ public class PlayerPawn : Pawn
 	void Awake()
 	{
 		rb = gameObject.GetComponent<Rigidbody>();
+		game = FindObjectOfType<Game>();
+		cam = playerCamera.GetComponent<Camera>();
 		//rb.constraints = RigidbodyConstraints.FreezeRotation;
-		rb.useGravity = true;
-		jumpHeight = jumpForce;
+		//rb.useGravity = true;
+		jumpForce = jumpHeight;
 
 
 		// Lock cursor
@@ -115,11 +129,16 @@ public class PlayerPawn : Pawn
 				velocity.y = -2f;
 			}*/
 
+		if (isGrounded && rb.velocity.y < 0)
+		{
+			rb.velocity += new Vector3(0f, -2f, 0f);
+		}
+
 		if (!isGrounded && !isWallRunning)
 		{
 			currentGravity += (currentGravity / 2) * Time.deltaTime;
 
-			rb.useGravity = true;
+			//rb.useGravity = true;
 
 			rb.velocity += new Vector3 (0f, currentGravity, 0f);
 
@@ -133,6 +152,8 @@ public class PlayerPawn : Pawn
 
 		CheckForWall();
 		WallRunInput();
+
+		attackTimer += Time.deltaTime;
 	}
 
 	private void UpdateHealth()
@@ -140,11 +161,16 @@ public class PlayerPawn : Pawn
 		if (depleteHealthOverTime)
 		{
 			Health -= Time.deltaTime;
+		}
 
-			if (exactPosition)
-			{
-				Health -= spells[2].EnergyCost * Time.deltaTime;
-			}
+		if (exactPosition)
+		{
+			Health -= spells[2].EnergyCost * Time.deltaTime;
+		}
+
+		if (siphonActive)
+		{
+			Health -= spells[3].EnergyCost * Time.deltaTime;
 		}
 
 		//Used for casting spells and updating energy bar and ability mx
@@ -159,7 +185,8 @@ public class PlayerPawn : Pawn
 		{
 			criticalHealth.Play();
 			healthCritical = true;
-			exactPosition = false; 
+			exactPosition = false;
+			siphonActive = false;
 
 		}
 		else if (Health > (StartingHealth * criticalLevel) && healthCritical == true)
@@ -443,9 +470,35 @@ public class PlayerPawn : Pawn
 		}
 	}
 
+	//To Melee
 	public override void Fire1(bool value)
 	{
-	
+		if (attackTimer > attackCooldown && !abilityMenuOpen)
+		{
+			audioSource.pitch = Random.Range(0.8f, 1.2f);
+			audioSource.PlayOneShot(swingSound, 0.5f);
+
+			lastAttackWasMelee = true;
+
+			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit, attackRange))
+			{
+				if (hit.collider.tag == "Enemy")
+				{
+					EnemyPawn epawn = hit.collider.GetComponent<EnemyPawn>();
+					epawn.TakeDamage(this, attackDamage, controller);
+					
+					//For when siphon ability is active
+					if (siphonActive)
+					{
+						Health += ((epawn.energyOnHit * spells[3].Amount) / Health);
+					}
+				}
+			}
+			Debug.Log("Attack");
+			attackTimer = 0;
+		}
 	}
 
 	//To Cast Spell
@@ -453,6 +506,7 @@ public class PlayerPawn : Pawn
 	{
 		if (spells[index].HoldCast == false && energyMultiplier > 1)
 		{
+			lastAttackWasMelee = false;
 			Health -= spells[index].EnergyCost;
 
 			CastSpell(index);
@@ -493,6 +547,10 @@ public class PlayerPawn : Pawn
 		if (index == 2)
 		{
 			Enhancement(index);
+		}
+		if (index == 3)
+		{
+			Siphon(index);
 		}
 	}
 
@@ -537,6 +595,19 @@ public class PlayerPawn : Pawn
 		}
 	}
 
+	private void Siphon(int index)
+	{
+		if (siphonActive == true)
+		{
+			siphonActive = false;
+
+		}
+		else if (siphonActive == false)
+		{
+			siphonActive = true;
+		}
+	}
+
 	public override void AddEffectHUD(BaseEffect effect)
 	{
 		if (effect.typeOfBuff == BaseEffect.buffType.Buff)
@@ -576,6 +647,14 @@ public class PlayerPawn : Pawn
 	public override void RemoveOngingEffect(BaseEffect effect)
 	{
 		base.RemoveOngingEffect(effect);
+	}
+
+	public override bool TakeDamage(Actor Source, float Value, Controller Instigator = null, DamageEventInfo EventInfo = null)
+	{
+		game.streak = 0;
+		game.scoreMX = 1.0f;
+
+		return base.TakeDamage(Source, Value, Instigator, EventInfo);
 	}
 
 	protected override void OnDeath()

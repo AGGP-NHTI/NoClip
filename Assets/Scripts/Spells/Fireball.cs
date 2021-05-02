@@ -20,7 +20,6 @@ public class Fireball : Actor
 	public ParticleSystem particleImpact;
 
 	[Header("Audio")]
-	public AudioSource audioSource;
 	public AudioClip explosionOneShot;
 
 	float distanceToTarget;
@@ -57,7 +56,7 @@ public class Fireball : Actor
 				}
 			}
 
-			if (other.gameObject.GetComponent<Pawn>())
+			if (other.gameObject.GetComponent<Pawn>() && impacted == false)
 			{
 				Pawn p = other.gameObject.GetComponent<Pawn>();
 
@@ -80,11 +79,7 @@ public class Fireball : Actor
 						Effect.EffectUpdate(Effect.Amount, Effect.MaxDuration);
 					}
 				}
-
-				if (impacted == false)
-				{
-					Impact();
-				}
+				Impact();
 			}
 		}
 	}
@@ -92,7 +87,7 @@ public class Fireball : Actor
 	private void Impact()
 	{
 		actors.AddRange(FindObjectsOfType<Actor>());
-		audioSource.PlayOneShot(explosionOneShot);
+		AudioSource.PlayClipAtPoint(explosionOneShot, gameObject.transform.position, 0.25f);
 
 		foreach (Actor a in actors)
 		{

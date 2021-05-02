@@ -107,7 +107,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3436862434040446524}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 18.66, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4914056158673950252}
@@ -137,7 +137,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 16
+  far clip plane: 1000
   field of view: 60
   orthographic: 1
   orthographic size: 15
@@ -166,6 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4914056158008327286}
   - component: {fileID: 4914056158008327281}
+  - component: {fileID: 1382507625480379658}
   - component: {fileID: 4914056158008327280}
   - component: {fileID: 8469087761897317250}
   - component: {fileID: 4036099791758274049}
@@ -235,6 +236,102 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!82 &1382507625480379658
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4914056158008327283}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!81 &4914056158008327280
 AudioListener:
   m_ObjectHideFlags: 0
@@ -678,11 +775,12 @@ MonoBehaviour:
   - {fileID: 3610421020385339215}
   - {fileID: 121297949341784376}
   ProjectileSpawn: {fileID: 6990431234342835495}
+  audioSource: {fileID: 1382507625480379658}
   verticalSensitivity: 4
   horizontalSensitivity: 1000
   playerCamera: {fileID: 4914056158008327283}
   gravity: -9.8
-  jumpForce: 15
+  jumpHeight: 15
   jumpTime: 0
   jumpTimeMax: 15
   jumpTimeCount: 1
@@ -700,10 +798,10 @@ MonoBehaviour:
   spells:
   - Name: Fireball
     ID: 0
-    EnergyCost: 5
-    Amount: 20
-    Amount2: 5
-    Duration: 5
+    EnergyCost: 10
+    Amount: 10
+    Amount2: 20
+    Duration: 3
     HoldCast: 0
   - Name: Freeze
     ID: 1
@@ -719,6 +817,13 @@ MonoBehaviour:
     Amount2: 1.25
     Duration: 1
     HoldCast: 0
+  - Name: Siphon
+    ID: 3
+    EnergyCost: 2
+    Amount: 50
+    Amount2: 0
+    Duration: 1
+    HoldCast: 0
   index: 0
   energyOverCritical: 0
   castCanKill: 0
@@ -726,6 +831,11 @@ MonoBehaviour:
   - {fileID: 3876250848648514420, guid: b920ca87fd1e3314d97db7709f0fbded, type: 3}
   - {fileID: 3876250848648514420, guid: b5edef6e903a3f747ac1944db2d143d4, type: 3}
   exactPosition: 0
+  swingSound: {fileID: 8300000, guid: 383465f0398ed17469ace8059c7b1d9c, type: 3}
+  attackDamage: 50
+  attackRange: 5
+  attackCooldown: 0.4
+  lastAttackWasMelee: 0
 --- !u!1 &6716319801614861870
 GameObject:
   m_ObjectHideFlags: 0

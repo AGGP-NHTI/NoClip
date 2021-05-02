@@ -10,7 +10,7 @@ public class Game : Info
     public Spawnpoint[] Spawnpoints; //Array of Spawnpoints already in world
     int spawnIndex;
     Spawnpoint ChosenSpawn; //Used in ReturnSpawn when Spectator is requesting a spawn location for new Pawn
-    public int score = 0;
+    public float score = 0;
     public float scoreMX = 1.0f;
     public int kills = 0;
     public int streak = 0;

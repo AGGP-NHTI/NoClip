@@ -291,12 +291,12 @@ public class FrameworkHUD : Actor
 					//and the angle is less than the next index low bound
 					if (angle > i * angleSegment && angle < (i + 1) * angleSegment)
 					{
-						options[i].color = highlightedColor;
+					//	options[i].color = highlightedColor;
 						hoverOption = i;
 					}
 					else
 					{
-						options[i].color = normalColor;
+					//	options[i].color = normalColor;
 					}
 				}
 			}
@@ -314,7 +314,7 @@ public class FrameworkHUD : Actor
 		hud.KillsText.text = "Kills:" + game.kills.ToString();
 		hud.StreakText.text = "Streak:" + game.streak.ToString();
 		hud.ScoreText.text = "Score:" + game.score.ToString();
-		hud.MultiplierText.text = "Multiplier:" + game.scoreMX.ToString("F1");
+		hud.MultiplierText.text = "Multiplier:" + game.scoreMX.ToString("F2");
 	}
 
 	private void LateUpdate()
