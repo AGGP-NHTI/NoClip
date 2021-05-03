@@ -11,6 +11,7 @@ public class FrameworkHUD : Actor
 {
 	public Controller controller;
 
+	private Game game;
 	private MinimapController mc;
 	private HudReferences hud;
 	private Pawn pawn;
@@ -26,12 +27,27 @@ public class FrameworkHUD : Actor
 	public float swapWarningTextColor = 0.25f;
 	public float resetWarningTextColor = 0.5f;
 
+	[Header("Radial Menu")]
+	public GameObject theMenu;
+
+	public Image[] options;
+
+	public Color normalColor, highlightedColor;
+
+	public int selectedOption;
+	private int hoverOption;
+
+	public Vector2 moveInput;
+	private int angleSegment;
+	private float menuWait = 0f;
+
+
 	//HUD objects color variables -- Find way to make list of objects referenced by name?
 	[Header("---------- HUD Colors ----------")]
 	[Header("Generic")]
-	public Color criticalBaseColor = new Color(255, 255, 0, 255);
-	public Color warningBaseColor = new Color(255, 0, 0, 255);
-	public Color warningChangeColor = new Color(200, 0, 41, 255);
+	public Color lowBaseColor = new Color(255, 255, 0, 255);
+	public Color criticalBaseColor = new Color(255, 0, 0, 255);
+	public Color criticalChangeColor = new Color(200, 0, 41, 255);
 
 	[Header("Health")]
 	public Color healthBaseColor = new Color(0, 152, 255, 255);
@@ -70,6 +86,9 @@ public class FrameworkHUD : Actor
 	{
 		pc = controller.GetComponents<PlayerController>();
 		mc = controller.GetComponent<MinimapController>();
+		game = controller.GetComponent<Game>();
+
+		angleSegment = 360 / options.Length;
 
 		//For player 1
 		if (controller.PlayerNumber == 1)
@@ -92,6 +111,16 @@ public class FrameworkHUD : Actor
 			{
 				playerPawn.Health += 10f;
 			}
+		}
+
+		if (theMenu.activeInHierarchy == true)
+		{
+			menuWait = 20;
+		}
+
+		if (menuWait > 0)
+		{
+			menuWait--;
 		}
 
 		//If player dies or respawns get new instance of the pawn
@@ -136,29 +165,10 @@ public class FrameworkHUD : Actor
 			{
 				//Get and update HUD colors
 				hud = currentPawnHUD.GetComponentInChildren<HudReferences>();
+				UpdateHUDColor();
 
-				hud.AbilityBackground.color = abilityBackgroundColor;
-				hud.AbilityBarBackground.color = abilityBarBackgroundColor;
-				hud.AbilityBarBoarder.color = abilityBarBoarderColor;
-				hud.AbilityBarFill.color = abilityBarFillColor;
-				hud.AbilityIconBoarder.color = abilityIconBoarderColor;
-				hud.AbilityMXBackground.color = abilityMXBackgroundColor;
-				hud.AbilityMXBoarder.color = abilityMXBoarderColor;
-				hud.AbilityMXText.color = abilityMXTextColor;
-				hud.HealthBarBackground.color = healthBackgroundColor;
-				hud.HealthBarBoarder.color = healthBoarderColor;
-				hud.PlayerIcon.color = radarPlayerIconColor;
-				hud.RadarBackground.color = radarBackgroundColor;
-				hud.RadarBoarder.color = radarBoarderColor;
-				hud.RadarDividers.color = radarDividersColor;
-				hud.RadarInnerBoarder.color = radarInnerBoarderColor;
-				hud.WaveBackground.color = waveBackgroundColor;
-				hud.WaveBoarder.color = waveBoarderColor;
-				hud.WaveText.color = waveTextColor;
-				hud.ScoreText.color = scoreTextColor;
-				hud.MultiplierText.color = multiplierTextColor;
-				hud.KillsText.color = killsTextColor;
-				hud.StreakText.color = streakTextColor;
+				hud.AbilityBarFill.fillAmount = playerPawn.getEnergy;
+				hud.AbilityMXText.text = "X" + playerPawn.getEnergy.ToString("F1");
 
 				for (int i = 0; i < mc.RadarNotches.Count; i++)
 				{
@@ -176,17 +186,17 @@ public class FrameworkHUD : Actor
 				//Set health time text to current health with 2 decimal places ("F2")
 				hud.HealthTimer.text = playerPawn.Health.ToString("F2");
 
-				if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.criticalLevel) && playerPawn.Health > (playerPawn.StartingHealth * playerPawn.warningLevel))
+				if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.lowLevel) && playerPawn.Health > (playerPawn.StartingHealth * playerPawn.criticalLevel))
 				{
 					hud.HealthWarningSymbol.gameObject.SetActive(true);
 
-					hud.HealthWarningSymbol.color = criticalBaseColor;
-					hud.HealthTimer.color = criticalBaseColor;
-					hud.HealthBars[0].color = criticalBaseColor;
-					hud.HealthBars[1].color = criticalBaseColor;
+					hud.HealthWarningSymbol.color = lowBaseColor;
+					hud.HealthTimer.color = lowBaseColor;
+					hud.HealthBars[0].color = lowBaseColor;
+					hud.HealthBars[1].color = lowBaseColor;
 				}
 				//For displaying a warning when the player is under set seconds worth of health
-				else if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.warningLevel))
+				else if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.criticalLevel))
 				{
 					warningTextColorSwap += Time.deltaTime;
 
@@ -194,17 +204,17 @@ public class FrameworkHUD : Actor
 					{
 						hud.HealthWarningSymbol.gameObject.SetActive(true);
 
-						hud.HealthWarningSymbol.color = warningBaseColor;
-						hud.HealthTimer.color = warningBaseColor;
-						hud.HealthBars[0].color = warningBaseColor;
-						hud.HealthBars[1].color = warningBaseColor;
+						hud.HealthWarningSymbol.color = criticalBaseColor;
+						hud.HealthTimer.color = criticalBaseColor;
+						hud.HealthBars[0].color = criticalBaseColor;
+						hud.HealthBars[1].color = criticalBaseColor;
 					}
 					else if (warningTextColorSwap > resetWarningTextColor)
 					{
-						hud.HealthWarningSymbol.color = warningChangeColor;
-						hud.HealthTimer.color = warningChangeColor;
-						hud.HealthBars[0].color = warningChangeColor;
-						hud.HealthBars[1].color = warningChangeColor;
+						hud.HealthWarningSymbol.color = criticalChangeColor;
+						hud.HealthTimer.color = criticalChangeColor;
+						hud.HealthBars[0].color = criticalChangeColor;
+						hud.HealthBars[1].color = criticalChangeColor;
 						warningTextColorSwap = 0f;
 					}
 				}
@@ -213,7 +223,7 @@ public class FrameworkHUD : Actor
 					hud.HealthBars[0].color = healthBaseColor;
 					hud.HealthBars[1].color = healthBaseColor;
 					hud.HealthTimer.color = timerBaseColor;
-					hud.HealthWarningSymbol.color = warningBaseColor;
+					hud.HealthWarningSymbol.color = criticalBaseColor;
 					warningTextColorSwap = 0f;
 					hud.HealthWarningSymbol.gameObject.SetActive(false);
 				}
@@ -221,8 +231,96 @@ public class FrameworkHUD : Actor
 		}
 	}
 
+	private void UpdateHUDColor()
+	{
+		hud.AbilityBackground.color = abilityBackgroundColor;
+		hud.AbilityBarBackground.color = abilityBarBackgroundColor;
+		hud.AbilityBarBoarder.color = abilityBarBoarderColor;
+		hud.AbilityBarFill.color = abilityBarFillColor;
+		hud.AbilityIconBoarder.color = abilityIconBoarderColor;
+		hud.AbilityMXBackground.color = abilityMXBackgroundColor;
+		hud.AbilityMXBoarder.color = abilityMXBoarderColor;
+		hud.AbilityMXText.color = abilityMXTextColor;
+		hud.HealthBarBackground.color = healthBackgroundColor;
+		hud.HealthBarBoarder.color = healthBoarderColor;
+		hud.PlayerIcon.color = radarPlayerIconColor;
+		hud.RadarBackground.color = radarBackgroundColor;
+		hud.RadarBoarder.color = radarBoarderColor;
+		hud.RadarDividers.color = radarDividersColor;
+		hud.RadarInnerBoarder.color = radarInnerBoarderColor;
+		hud.WaveBackground.color = waveBackgroundColor;
+		hud.WaveBoarder.color = waveBoarderColor;
+		hud.WaveText.color = waveTextColor;
+		hud.ScoreText.color = scoreTextColor;
+		hud.MultiplierText.color = multiplierTextColor;
+		hud.KillsText.color = killsTextColor;
+		hud.StreakText.color = streakTextColor;
+	}
+
+	public void UpdateRadMenu()
+	{
+		if (playerPawn.abilityMenuOpen == true)
+		{
+			theMenu.SetActive(true);	
+		}
+		else
+		{
+			theMenu.SetActive(false);
+		}
+
+		if (theMenu.activeInHierarchy)
+		{
+			moveInput.x = Input.mousePosition.x - (Screen.width / 2f);
+			moveInput.y = Input.mousePosition.y - (Screen.height / 2f);
+			moveInput.Normalize();
+
+			if (moveInput != Vector2.zero)
+			{
+				//Calculate Angle in degrees from 0 to 360
+				float angle = Mathf.Atan2(moveInput.y, -moveInput.x) / Mathf.PI;
+				angle *= 180; // Convert from pi to degrees
+				angle += 90f; // Set 0 position
+				if (angle < 0)
+				{
+					angle += 360; // Convert from -180 to 180 -> 0 to 360
+				}
+
+				for (int i = 0; i < options.Length; i++)
+				{
+					//if the angle is greater than the index low bound,
+					//and the angle is less than the next index low bound
+					if (angle > i * angleSegment && angle < (i + 1) * angleSegment)
+					{
+					//	options[i].color = highlightedColor;
+						hoverOption = i;
+					}
+					else
+					{
+					//	options[i].color = normalColor;
+					}
+				}
+			}
+			if (Input.GetMouseButtonDown(0))
+			{
+				selectedOption = hoverOption;
+				hud.AbilityIcon.sprite = options[selectedOption].sprite;
+				playerPawn.index = selectedOption;
+			}
+		}
+	}
+
+	public void UpdateInfo()
+	{
+		hud.KillsText.text = "Kills:" + game.kills.ToString();
+		hud.StreakText.text = "Streak:" + game.streak.ToString();
+		hud.ScoreText.text = "Score:" + game.score.ToString();
+		hud.MultiplierText.text = "Multiplier:" + game.scoreMX.ToString("F2");
+	}
+
 	private void LateUpdate()
 	{
 		UpdateHUD();
+		UpdateRadMenu();
+		UpdateInfo();
 	}
 }
