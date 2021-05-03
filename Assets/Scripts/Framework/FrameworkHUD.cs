@@ -20,8 +20,10 @@ public class FrameworkHUD : Actor
 	private GameObject SpectatorHUD;
 	private PlayerController[] pc;
 	private PlayerPawn playerPawn;
-	private GameObject currentSpecHUD = null;
-	private GameObject currentPawnHUD = null;
+	[HideInInspector]
+	public GameObject currentSpecHUD = null;
+	[HideInInspector]
+	public GameObject currentPawnHUD = null;
 
 	private float warningTextColorSwap = 0f;
 	public float swapWarningTextColor = 0.25f;

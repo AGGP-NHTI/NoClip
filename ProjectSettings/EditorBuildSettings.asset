@@ -5,7 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/NoClip.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 66fc31fb44cbd7946b1937b6c7351554
+  - enabled: 1
+    path: Assets/Scenes/Levels.unity
+    guid: ce828c5198d3b9b4b8d49e8b583a19e4
   m_configObjects: {}

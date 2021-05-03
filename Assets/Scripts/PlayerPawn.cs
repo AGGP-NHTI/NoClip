@@ -8,6 +8,7 @@ public class PlayerPawn : Pawn
 	Game game;
 	public AudioSource audioSource;
 	FrameworkHUD HUD;
+	PauseIG pause;
 
 	[Header("Movement")]
 	public float verticalSensitivity = 3.0f;
@@ -88,73 +89,75 @@ public class PlayerPawn : Pawn
 		game = FindObjectOfType<Game>();
 		cam = playerCamera.GetComponent<Camera>();
 		HUD = FindObjectOfType<FrameworkHUD>();
+		pause = FindObjectOfType<PauseIG>();
 		//rb.constraints = RigidbodyConstraints.FreezeRotation;
 		//rb.useGravity = true;
 		jumpForce = jumpHeight;
 
-		// Lock cursor
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		currentGravity = gravity;
 	}
 
 	public override void Update()
 	{
-		base.Update();
-
-		// Detect if player is on ground
-		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-		rb.useGravity = false;
-
-		GetInput();
-
-		MoveStrafe(leftStick);
-
-		//if radial menu is not open allow mouse player movement		
-		if (radMenuOpen == false)
+		if (!pause.gameIsPaused)
 		{
-			RotateRight(rightStick.x);
-			CameraPitch(rightStick.y);
-		}
+			base.Update();
 
-		CheckForWall();
-		WallRunInput();
+			// Detect if player is on ground
+			isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+			//rb.useGravity = false;
 
-		UpdateHealth();
+			GetInput();
 
-		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-		{
-			isJumping = true;
-		}
+			MoveStrafe(leftStick);
+
+			//if radial menu is not open allow mouse player movement		
+			if (radMenuOpen == false)
+			{
+				RotateRight(rightStick.x);
+				CameraPitch(rightStick.y);
+			}
+
+			CheckForWall();
+			WallRunInput();
+
+			UpdateHealth();
+
+			if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+			{
+				isJumping = true;
+			}
 			/*if(isGrounded && velocity.y < 0)
 			{
 				velocity.y = -2f;
 			}*/
 
-		if (isGrounded && rb.velocity.y < 0)
-		{
-			rb.velocity += new Vector3(0f, -2f, 0f);
-		}
+			if (isGrounded && rb.velocity.y < 0)
+			{
+				rb.velocity += new Vector3(0f, -2f, 0f);
+			}
 
-		if (!isGrounded && !isWallRunning)
-		{
-			currentGravity += (currentGravity / 2) * Time.deltaTime;
+			if (!isGrounded && !isWallRunning)
+			{
+				currentGravity += (currentGravity / 2) * Time.deltaTime;
 
-			//rb.useGravity = true;
+				//rb.useGravity = true;
 
-			rb.velocity += new Vector3 (0f, currentGravity, 0f);
+				rb.velocity += new Vector3(0f, currentGravity, 0f);
 
-			//Physics.gravity = new Vector3(0, gravity, 0);
-		}
+				//Physics.gravity = new Vector3(0, gravity, 0);
+			}
 
-		if (isGrounded || isWallRunning)
-		{
-			currentGravity = gravity;
-		}
+			if (isGrounded || isWallRunning)
+			{
+				currentGravity = gravity;
+			}
 
-		CheckForWall();
-		WallRunInput();
+			CheckForWall();
+			WallRunInput();
 
-		attackTimer += Time.deltaTime;
+			attackTimer += Time.deltaTime;
+		}	
 	}
 
 	private void UpdateHealth()
@@ -482,7 +485,7 @@ public class PlayerPawn : Pawn
 	//To Melee
 	public override void Fire1(bool value)
 	{
-		if (attackTimer > attackCooldown && !abilityMenuOpen)
+		if (attackTimer > attackCooldown && !abilityMenuOpen && !pause.gameIsPaused)
 		{
 			audioSource.pitch = Random.Range(0.8f, 1.2f);
 			audioSource.PlayOneShot(swingSound, 0.5f);
@@ -513,7 +516,7 @@ public class PlayerPawn : Pawn
 	//To Cast Spell
 	public override void Fire2(bool value)
 	{
-		if (spells[index].HoldCast == false && energyMultiplier > 1)
+		if (spells[index].HoldCast == false && energyMultiplier > 1 && !pause.gameIsPaused)
 		{
 			lastAttackWasMelee = false;
 			Health -= spells[index].EnergyCost;
@@ -529,13 +532,13 @@ public class PlayerPawn : Pawn
 
 	public override void AbilityMenu(bool value)
 	{
-		if (value == true) 
+		if (value && !pause.gameIsPaused) 
 		{
 			radMenuOpen = true;
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 		}
-		else
+		else if (!pause.gameIsPaused)
 		{
 			radMenuOpen = false;
 			Cursor.lockState = CursorLockMode.Locked;
