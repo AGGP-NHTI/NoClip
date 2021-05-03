@@ -40,4 +40,10 @@ public class HudReferences : MonoBehaviour
 	public TextMeshProUGUI MultiplierText;
 	public TextMeshProUGUI KillsText;
 	public TextMeshProUGUI StreakText;
+
+	[Header("Status")]
+	public GridLayoutGroup BuffsPanel;
+	public GridLayoutGroup DebuffsPanel;
+	public GameObject[] Buffs;
+	public GameObject[] Debuffs;
 }
