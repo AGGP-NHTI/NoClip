@@ -17,8 +17,10 @@ public class Guard : EnemyPawn
         Vector3 startPos = gameObject.transform.position;
     }
 
-    void Update()
+    public override void Update()
     {
+        base.Update();
+
         if (MC)
         {
             transform.LookAt(MC.transform);

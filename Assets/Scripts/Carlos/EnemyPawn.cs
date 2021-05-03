@@ -9,6 +9,7 @@ public class EnemyPawn : Pawn
 	public int scoreOnKill;
 	public float energyOnHit;
 	public float energyOnDeath;
+	public bool isDead = false;
 	Game game;
 
 	void Start()
@@ -27,6 +28,11 @@ public class EnemyPawn : Pawn
 		}
 	}
 
+	public virtual void PerformAttack()
+	{
+
+	}
+
 	protected override void OnDeath()
 	{
 		game.score += scoreOnKill * game.scoreMX;
@@ -41,6 +47,7 @@ public class EnemyPawn : Pawn
 			p.Health += energyOnDeath;
 		}
 
+		isDead = true;
 
 		Destroy(this.gameObject);
 	}

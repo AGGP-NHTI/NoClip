@@ -11,8 +11,10 @@ public class Fodder : EnemyPawn
 
     RaycastHit hit;
 
-    void Update()
+    public override void Update()
     {
+        base.Update();
+
         if (MC)
         {
             transform.LookAt(MC.transform);
