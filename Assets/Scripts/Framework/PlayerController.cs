@@ -82,8 +82,6 @@ public class PlayerController : Controller
 			Fire3(InputCurrent.ButtonWest);
 		}
 
-		AbilityMenu(InputCurrent.LeftShoulder);
-		
 		Look();
 		Move(InputCurrent.HorizontalLeft, InputCurrent.VerticalLeft);
 	}
@@ -119,7 +117,7 @@ public class PlayerController : Controller
 	{
 		if (value)
 		{
-			//LOG("Del-Fire1");
+			LOG("Del-Fire1");
 			Pawn pawn = ((Pawn)ControlledPawn);
 			if (pawn)
 			{
@@ -132,7 +130,7 @@ public class PlayerController : Controller
 	{
 		if (value)
 		{
-			//LOG("Del-Fire2");
+			LOG("Del-Fire2");
 			Pawn pawn = ((Pawn)ControlledPawn);
 			if (pawn)
 			{
@@ -145,21 +143,12 @@ public class PlayerController : Controller
 	{
 		if (value)
 		{
-			//LOG("Del-Fire3");
+			LOG("Del-Fire3");
 			Pawn pawn = ((Pawn)ControlledPawn);
 			if (pawn)
 			{
 				pawn.Fire3(value);
 			}
-		}
-	}
-
-	public virtual void AbilityMenu(bool value)
-	{
-		Pawn pawn = ((Pawn)ControlledPawn);
-		if (pawn)
-		{
-			pawn.AbilityMenu(value);
 		}
 	}
 

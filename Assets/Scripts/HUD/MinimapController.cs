@@ -6,9 +6,10 @@ using TMPro;
 
 public class MinimapController : MonoBehaviour
 {
-	
+	public bool exactPosition = false;
 	public List<GameObject> objectsOnRadar;
 	public List<GameObject> RadarNotches;
+	public Color NotchColor;
 	public int maxCheckDistance = 15;
 	public int minCheckDistance = 5;
 
@@ -22,6 +23,19 @@ public class MinimapController : MonoBehaviour
 		//Get player. Set up for only a single player -- More testing is needed for MP
 		Player = FindObjectOfType<PlayerPawn>();
 
+		//Swap radar from exact or relative -- for testing purposes
+		if (Input.GetKeyDown(KeyCode.E))
+		{
+			if (exactPosition == true)
+			{
+				exactPosition = false;
+			}
+			else if (exactPosition == false)
+			{
+				exactPosition = true;
+			}
+		}
+
 		//Clear list to update objects that can be rendered - for when enemies die or spawn
 		objectsOnRadar.Clear();
 		List<GameObject> Radar = new List<GameObject>(objectsOnRadar);
@@ -30,12 +44,19 @@ public class MinimapController : MonoBehaviour
 
 		//Used for displaying items in the list in the editor
 		objectsOnRadar = Radar;
+
+		//Add objects to list
+		foreach (GameObject notch in RadarNotches)
+		{
+			//Image nothcImage = notch.GetComponent<Image>();
+			//nothcImage.color = new Color(255, 255, 255, 0);
+		}
 	}
 
 	void LateUpdate()
 	{
 		//Check if radar is for exact position or relative
-		if (Player.exactPosition == true)
+		if (exactPosition == true)
 		{
 			foreach (GameObject pawn in objectsOnRadar)
 			{
@@ -155,6 +176,9 @@ public class MinimapController : MonoBehaviour
 		{
 			if (RadarNotches.Count != 0)
 			{
+				Image notchImg = notch.GetComponent<Image>();
+
+				notchImg.color = NotchColor;
 				notch.SetActive(false);
 			}
 		}

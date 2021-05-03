@@ -11,7 +11,6 @@ public class FrameworkHUD : Actor
 {
 	public Controller controller;
 
-	private Game game;
 	private MinimapController mc;
 	private HudReferences hud;
 	private Pawn pawn;
@@ -44,9 +43,9 @@ public class FrameworkHUD : Actor
 	//HUD objects color variables -- Find way to make list of objects referenced by name?
 	[Header("---------- HUD Colors ----------")]
 	[Header("Generic")]
-	public Color lowBaseColor = new Color(255, 255, 0, 255);
-	public Color criticalBaseColor = new Color(255, 0, 0, 255);
-	public Color criticalChangeColor = new Color(200, 0, 41, 255);
+	public Color criticalBaseColor = new Color(255, 255, 0, 255);
+	public Color warningBaseColor = new Color(255, 0, 0, 255);
+	public Color warningChangeColor = new Color(200, 0, 41, 255);
 
 	[Header("Health")]
 	public Color healthBaseColor = new Color(0, 152, 255, 255);
@@ -89,9 +88,6 @@ public class FrameworkHUD : Actor
 	{
 		pc = controller.GetComponents<PlayerController>();
 		mc = controller.GetComponent<MinimapController>();
-		game = controller.GetComponent<Game>();
-
-		angleSegment = 360 / options.Length;
 
 		status.Add("Fire Burn", 0);
 		status.Add("Frozen", 1);
@@ -119,16 +115,6 @@ public class FrameworkHUD : Actor
 			{
 				playerPawn.Health += 10f;
 			}
-		}
-
-		if (theMenu.activeInHierarchy == true)
-		{
-			menuWait = 20;
-		}
-
-		if (menuWait > 0)
-		{
-			menuWait--;
 		}
 
 		//If player dies or respawns get new instance of the pawn
@@ -173,10 +159,29 @@ public class FrameworkHUD : Actor
 			{
 				//Get and update HUD colors
 				hud = currentPawnHUD.GetComponentInChildren<HudReferences>();
-				UpdateHUDColor();
 
-				hud.AbilityBarFill.fillAmount = playerPawn.getEnergy;
-				hud.AbilityMXText.text = "X" + playerPawn.getEnergy.ToString("F1");
+				hud.AbilityBackground.color = abilityBackgroundColor;
+				hud.AbilityBarBackground.color = abilityBarBackgroundColor;
+				hud.AbilityBarBoarder.color = abilityBarBoarderColor;
+				hud.AbilityBarFill.color = abilityBarFillColor;
+				hud.AbilityIconBoarder.color = abilityIconBoarderColor;
+				hud.AbilityMXBackground.color = abilityMXBackgroundColor;
+				hud.AbilityMXBoarder.color = abilityMXBoarderColor;
+				hud.AbilityMXText.color = abilityMXTextColor;
+				hud.HealthBarBackground.color = healthBackgroundColor;
+				hud.HealthBarBoarder.color = healthBoarderColor;
+				hud.PlayerIcon.color = radarPlayerIconColor;
+				hud.RadarBackground.color = radarBackgroundColor;
+				hud.RadarBoarder.color = radarBoarderColor;
+				hud.RadarDividers.color = radarDividersColor;
+				hud.RadarInnerBoarder.color = radarInnerBoarderColor;
+				hud.WaveBackground.color = waveBackgroundColor;
+				hud.WaveBoarder.color = waveBoarderColor;
+				hud.WaveText.color = waveTextColor;
+				hud.ScoreText.color = scoreTextColor;
+				hud.MultiplierText.color = multiplierTextColor;
+				hud.KillsText.color = killsTextColor;
+				hud.StreakText.color = streakTextColor;
 
 				for (int i = 0; i < mc.RadarNotches.Count; i++)
 				{
@@ -194,17 +199,17 @@ public class FrameworkHUD : Actor
 				//Set health time text to current health with 2 decimal places ("F2")
 				hud.HealthTimer.text = playerPawn.Health.ToString("F2");
 
-				if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.lowLevel) && playerPawn.Health > (playerPawn.StartingHealth * playerPawn.criticalLevel))
+				if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.criticalLevel) && playerPawn.Health > (playerPawn.StartingHealth * playerPawn.warningLevel))
 				{
 					hud.HealthWarningSymbol.gameObject.SetActive(true);
 
-					hud.HealthWarningSymbol.color = lowBaseColor;
-					hud.HealthTimer.color = lowBaseColor;
-					hud.HealthBars[0].color = lowBaseColor;
-					hud.HealthBars[1].color = lowBaseColor;
+					hud.HealthWarningSymbol.color = criticalBaseColor;
+					hud.HealthTimer.color = criticalBaseColor;
+					hud.HealthBars[0].color = criticalBaseColor;
+					hud.HealthBars[1].color = criticalBaseColor;
 				}
 				//For displaying a warning when the player is under set seconds worth of health
-				else if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.criticalLevel))
+				else if (playerPawn.Health <= (playerPawn.StartingHealth * playerPawn.warningLevel))
 				{
 					warningTextColorSwap += Time.deltaTime;
 
@@ -212,17 +217,17 @@ public class FrameworkHUD : Actor
 					{
 						hud.HealthWarningSymbol.gameObject.SetActive(true);
 
-						hud.HealthWarningSymbol.color = criticalBaseColor;
-						hud.HealthTimer.color = criticalBaseColor;
-						hud.HealthBars[0].color = criticalBaseColor;
-						hud.HealthBars[1].color = criticalBaseColor;
+						hud.HealthWarningSymbol.color = warningBaseColor;
+						hud.HealthTimer.color = warningBaseColor;
+						hud.HealthBars[0].color = warningBaseColor;
+						hud.HealthBars[1].color = warningBaseColor;
 					}
 					else if (warningTextColorSwap > resetWarningTextColor)
 					{
-						hud.HealthWarningSymbol.color = criticalChangeColor;
-						hud.HealthTimer.color = criticalChangeColor;
-						hud.HealthBars[0].color = criticalChangeColor;
-						hud.HealthBars[1].color = criticalChangeColor;
+						hud.HealthWarningSymbol.color = warningChangeColor;
+						hud.HealthTimer.color = warningChangeColor;
+						hud.HealthBars[0].color = warningChangeColor;
+						hud.HealthBars[1].color = warningChangeColor;
 						warningTextColorSwap = 0f;
 					}
 				}
@@ -231,7 +236,7 @@ public class FrameworkHUD : Actor
 					hud.HealthBars[0].color = healthBaseColor;
 					hud.HealthBars[1].color = healthBaseColor;
 					hud.HealthTimer.color = timerBaseColor;
-					hud.HealthWarningSymbol.color = criticalBaseColor;
+					hud.HealthWarningSymbol.color = warningBaseColor;
 					warningTextColorSwap = 0f;
 					hud.HealthWarningSymbol.gameObject.SetActive(false);
 				}
@@ -372,7 +377,5 @@ public class FrameworkHUD : Actor
 	private void LateUpdate()
 	{
 		UpdateHUD();
-		UpdateRadMenu();
-		UpdateInfo();
 	}
 }

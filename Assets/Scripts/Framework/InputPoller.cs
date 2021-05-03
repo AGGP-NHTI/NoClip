@@ -62,7 +62,6 @@ public class InputPoller : Info {
 		newInputState.ButtonSouth = Input.GetButtonDown("Jump");
 		newInputState.ButtonEast = Input.GetButtonDown("Fire2");
 		newInputState.ButtonWest = Input.GetButtonDown("Fire3");
-		newInputState.LeftShoulder = Input.GetButton("AbilityMenu");
 	}
 
 	/// <summary>
@@ -71,7 +70,12 @@ public class InputPoller : Info {
 	/// <returns>InputState for Requested Player</returns>
 	public virtual void GetPlayer2Input(InputState newInputState)
 	{
-
+		newInputState.HorizontalLeft = Input.GetAxis("P2Horizontal");
+		newInputState.VerticalLeft = Input.GetAxis("P2Vertical");
+		newInputState.ButtonNorth = Input.GetButtonDown("P2Fire1");
+		newInputState.ButtonSouth = Input.GetButtonDown("P2Fire2");
+		newInputState.ButtonEast = Input.GetButtonDown("P2Fire3");
+		newInputState.ButtonWest = Input.GetButtonDown("P2Fire4");
 	}
 
 	/// <summary>
