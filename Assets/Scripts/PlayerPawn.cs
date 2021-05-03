@@ -5,20 +5,16 @@ using UnityEngine;
 public class PlayerPawn : Pawn
 {
 	public GameObject ProjectileSpawn;
-	Game game;
-	public AudioSource audioSource;
 
 	[Header("Movement")]
+	public float moveSpeed = 5; // Movement Speed
 	public float verticalSensitivity = 3.0f;
 	public float horizontalSensitivity = 200.0f;
-	//public float jumpHeight = 2f; // Generic Jump Height
+	public float jumpHeight = 2f; // Generic Jump Height
 	//public CharacterController CC; //This is the CharacterController Component --- NOT A SCRIPT
 	public GameObject playerCamera;
-	Camera cam;
 	public float gravity = -9.81f;  // The speed in which the pawn will fall
-	float currentGravity; // If pawn is in the air compound gravity to increase speed
-	float jumpForce;
-	public float jumpHeight = 15f;
+	public float jumpForce = 300.0f;
 	public float jumpTime = 0.0f;
 	public float jumpTimeMax = 10.0f;
 	public float jumpTimeCount = 1.0f;
@@ -40,179 +36,58 @@ public class PlayerPawn : Pawn
 	bool wallRight, wallLeft, isWallRunning;
 
 	[Header("Health")]
-	public bool depleteHealthOverTime = true;
-	private float energyMultiplier;
 	public AudioSource criticalHealth;
 	public AudioSource coreStabile;
 	public AudioSource coreCritical;
 
-	[Tooltip("As Percentage of Max Health where the player is Low Health")]
+	[Tooltip("As Percentage of Max Health")]
 	[Range(0f, 1f)]
-	public float lowLevel = 0.2f;
+	public float criticalLevel = 0.2f;
 
-	[Tooltip("As Percentage of Max Health where the player is Critical Health")]
+	[Tooltip("As Percentage of Max Health")]
 	[Range(0f,1f)]
-	public float criticalLevel = 0.1f;
+	public float warningLevel = 0.1f;
 	bool healthCritical = false;
-
-	[Header("Spells")]
-	public List<Spells> spells;
-	public int index = 0;
-	[Tooltip("How much energy over the critical amount does the player need minimum to cast spells.")]
-	public float energyOverCritical = 0f;
-	[Tooltip("Can the player cast a spell into the critical health zone?")]
-	public bool castCanKill = false;
-	public GameObject[] projectiles;
-
-	[Header("Radar")]
-	public bool exactPosition = false;
-
-	[Header("Attack")]
-	public AudioClip swingSound;
-	public float attackDamage;
-	public float attackRange;
-	public float attackCooldown;
-	float attackTimer;
-	public bool lastAttackWasMelee = false;
-	bool siphonActive = false;
-
-	public float getEnergy
-	{
-		get { return energyMultiplier; }
-	}
 
 	void Awake()
 	{
 		rb = gameObject.GetComponent<Rigidbody>();
-		game = FindObjectOfType<Game>();
-		cam = playerCamera.GetComponent<Camera>();
 		//rb.constraints = RigidbodyConstraints.FreezeRotation;
-		//rb.useGravity = true;
-		jumpForce = jumpHeight;
-
+		rb.useGravity = true;
 
 		// Lock cursor
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 	}
 
-	public override void Update()
+	void Update()
 	{
-		base.Update();
+		Health -= Time.deltaTime;
+		rb.useGravity = false;
+
+		HealthUpdate();
 
 		// Detect if player is on ground
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-		rb.useGravity = false;
 
 		GetInput();
 
 		MoveStrafe(leftStick);
-
-		//if radial menu is not open allow mouse player movement		
-		if (radMenuOpen == false)
-		{
-			RotateRight(rightStick.x);
-			CameraPitch(rightStick.y);
-		}
+		RotateRight(rightStick.x);
+		CameraPitch(rightStick.y);
 
 		CheckForWall();
 		WallRunInput();
-
-		UpdateHealth();
 
 		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
 		{
 			isJumping = true;
 		}
-			/*if(isGrounded && velocity.y < 0)
-			{
-				velocity.y = -2f;
-			}*/
-
-		if (isGrounded && rb.velocity.y < 0)
-		{
-			rb.velocity += new Vector3(0f, -2f, 0f);
-		}
 
 		if (!isGrounded && !isWallRunning)
 		{
-			currentGravity += (currentGravity / 2) * Time.deltaTime;
-
-			//rb.useGravity = true;
-
-			rb.velocity += new Vector3 (0f, currentGravity, 0f);
-
-			//Physics.gravity = new Vector3(0, gravity, 0);
-		}
-
-		if (isGrounded || isWallRunning)
-		{
-			currentGravity = gravity;
-		}
-
-		CheckForWall();
-		WallRunInput();
-
-		attackTimer += Time.deltaTime;
-	}
-
-	private void UpdateHealth()
-	{
-		if (depleteHealthOverTime)
-		{
-			Health -= Time.deltaTime;
-		}
-
-		if (exactPosition)
-		{
-			Health -= spells[2].EnergyCost * Time.deltaTime;
-		}
-
-		if (siphonActive)
-		{
-			Health -= spells[3].EnergyCost * Time.deltaTime;
-		}
-
-		//Used for casting spells and updating energy bar and ability mx
-		energyMultiplier = ((Health - (StartingHealth * criticalLevel)) / spells[index].EnergyCost) - (energyOverCritical / 5);
-		if (energyMultiplier < 0)
-		{
-			energyMultiplier = 0;
-		}
-
-		//Detect when player is at a percentage of their health, if true then play critical health sound
-		if (Health < (StartingHealth * criticalLevel) && criticalHealth.isPlaying == false)
-		{
-			criticalHealth.Play();
-			healthCritical = true;
-			exactPosition = false;
-			siphonActive = false;
-
-		}
-		else if (Health > (StartingHealth * criticalLevel) && healthCritical == true)
-		{
-			coreStabile.Play();
-			criticalHealth.Stop();
-			healthCritical = false;
-		}
-
-		//When entering critical health
-		if (Health < StartingHealth * criticalLevel && Health > (StartingHealth * criticalLevel) - 0.1)
-		{
-			coreCritical.Play();
-		}
-
-		//Prvent health from going under zero
-		if (Health < 0)
-		{
-			criticalHealth.Stop();
-			Health = 0;
-		}
-
-		//Prevent health from going over max
-		if (Health > StartingHealth)
-		{
-			Health = StartingHealth;
+			rb.useGravity = true;
+			Physics.gravity = new Vector3(0, gravity, 0);
 		}
 	}
 
@@ -229,19 +104,15 @@ public class PlayerPawn : Pawn
 			jumpTime = 0.0f;
 			isJumping = false;
 		}
-
 	}
 
 	//Old Look/Jump/Movement Code Using CharacterController Component
 	/*public override void Look()
 	{
-		if (radMenuOpen == false)
-		{
-			rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-			rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);    //Set max angle for looking up and down
-			playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);   //Rotate Player along X 
-			transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
-		}
+		rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+		rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);	//Set max angle for looking up and down
+		playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);	//Rotate Player along X 
+		transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
 
 		if (wallRight && isWallRunning)
 		{
@@ -324,6 +195,38 @@ public class PlayerPawn : Pawn
 			}
 		}
 	}*/
+
+	void HealthUpdate()
+	{
+		//Detect when player is at a percentage of their health, if true then play critical health sound
+		if (Health < (StartingHealth * warningLevel) && criticalHealth.isPlaying == false)
+		{
+			criticalHealth.Play();
+			healthCritical = true;
+		}
+		else if (Health > (StartingHealth * warningLevel) && healthCritical == true)
+		{
+			coreStabile.Play();
+			criticalHealth.Stop();
+			healthCritical = false;
+		}
+
+		if (Health < StartingHealth * criticalLevel && Health > (StartingHealth * criticalLevel) - 0.1)
+		{
+			coreCritical.Play();
+		}
+
+		if (Health < 0)
+		{
+			criticalHealth.Stop();
+			Health = 0;
+		}
+
+		if (Health > StartingHealth)
+		{
+			Health = StartingHealth;
+		}
+	}
 
 	//New Movement Using Rigidbody
 	void GetInput()
@@ -411,13 +314,13 @@ public class PlayerPawn : Pawn
 	}
 
 	void CameraPitch(float value)
-	{
-		camPitch -= (value * verticalSensitivity);
-		camPitch = Mathf.Clamp(camPitch, minCamClamp, maxCamClamp);
+    {
+        camPitch -= (value * verticalSensitivity);
+        camPitch = Mathf.Clamp(camPitch, minCamClamp, maxCamClamp);
 
-		playerCamera.transform.localRotation = Quaternion.Euler(camPitch, 0f, 0f);
-		//cameraObj.Rotate(Vector3.up * yRotation);
-	}
+        playerCamera.transform.localRotation = Quaternion.Euler(camPitch, 0f, 0f);
+        //cameraObj.Rotate(Vector3.up * yRotation);
+    }
 
 	void RotateRight(float value)
 	{
@@ -470,191 +373,19 @@ public class PlayerPawn : Pawn
 		}
 	}
 
-	//To Melee
 	public override void Fire1(bool value)
 	{
-		if (attackTimer > attackCooldown && !abilityMenuOpen)
-		{
-			audioSource.pitch = Random.Range(0.8f, 1.2f);
-			audioSource.PlayOneShot(swingSound, 0.5f);
-
-			lastAttackWasMelee = true;
-
-			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, attackRange))
-			{
-				if (hit.collider.tag == "Enemy")
-				{
-					EnemyPawn epawn = hit.collider.GetComponent<EnemyPawn>();
-					epawn.TakeDamage(this, attackDamage, controller);
-					
-					//For when siphon ability is active
-					if (siphonActive)
-					{
-						Health += ((epawn.energyOnHit * spells[3].Amount) / Health);
-					}
-				}
-			}
-			Debug.Log("Attack");
-			attackTimer = 0;
-		}
+	
 	}
 
-	//To Cast Spell
 	public override void Fire2(bool value)
 	{
-		if (spells[index].HoldCast == false && energyMultiplier > 1)
-		{
-			lastAttackWasMelee = false;
-			Health -= spells[index].EnergyCost;
 
-			CastSpell(index);
-		}
 	}
 
 	public override void Fire3(bool value)
 	{
 
-	}
-
-	public override void AbilityMenu(bool value)
-	{
-		if (value == true) 
-		{
-			radMenuOpen = true;
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
-		}
-		else
-		{
-			radMenuOpen = false;
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-		}
-	}
-
-	private void CastSpell(int index)
-	{
-		if (index == 0)
-		{
-			ShootFireball(index);
-		}
-		if (index == 1)
-		{
-			FreezeArea(index);
-		}
-		if (index == 2)
-		{
-			Enhancement(index);
-		}
-		if (index == 3)
-		{
-			Siphon(index);
-		}
-	}
-
-	private void ShootFireball(int index)
-	{
-		GameObject fireball = Factory(projectiles[0], ProjectileSpawn.transform.position, ProjectileSpawn.transform.rotation, controller);
-		Fireball fb = fireball.GetComponent<Fireball>();
-		
-		fb.GetComponent<Rigidbody>().velocity = ProjectileSpawn.transform.forward * spells[index].Amount2;
-		fb.damage = spells[index].Amount;
-		fb.lifetime = spells[index].Duration;
-		fb.Owner = controller;
-	}
-
-	private void FreezeArea(int index)
-	{
-		GameObject freezeArea = Factory(projectiles[1], transform.position, transform.rotation, controller);
-		Freeze freeze = freezeArea.GetComponent<Freeze>();
-
-		freeze.damage = spells[index].Amount;
-		freeze.freezeRadius = spells[index].Amount2;
-		freeze.lifetime = spells[index].Duration;
-		freeze.owner = this;
-		freeze.contOwner = controller;
-		freeze.Activate();
-	}
-
-	private void Enhancement(int index)
-	{
-		if (exactPosition == true)
-		{
-			exactPosition = false;
-			moveSpeed /= spells[index].Amount;
-			jumpForce /= spells[index].Amount2;
-
-		}
-		else if (exactPosition == false)
-		{
-			exactPosition = true;
-			moveSpeed *= spells[index].Amount;
-			jumpForce *= spells[index].Amount2;
-		}
-	}
-
-	private void Siphon(int index)
-	{
-		if (siphonActive == true)
-		{
-			siphonActive = false;
-
-		}
-		else if (siphonActive == false)
-		{
-			siphonActive = true;
-		}
-	}
-
-	public override void AddEffectHUD(BaseEffect effect)
-	{
-		if (effect.typeOfBuff == BaseEffect.buffType.Buff)
-		{
-			//playerHUD.AddBuff(effect.Name);
-		}
-
-		if (effect.typeOfBuff == BaseEffect.buffType.Debuff)
-		{
-			//playerHUD.AddDebuff(effect.Name);
-		}
-	}
-
-	public override void RemoveEffectHUD(BaseEffect effect)
-	{
-		if (effect.typeOfBuff == BaseEffect.buffType.Buff)
-		{
-			//playerHUD.RemoveBuff(effect.Name);
-		}
-
-		if (effect.typeOfBuff == BaseEffect.buffType.Debuff)
-		{
-			//playerHUD.RemoveDebuff(effect.Name);
-		}
-	}
-
-	public override void UpdateEffectHUD(BaseEffect effect, float percentageFill)
-	{
-		//playerHUD.UpdateEffect(effect, percentageFill);
-	}
-
-	public override void AddOngingEffect(BaseEffect effect)
-	{
-		base.AddOngingEffect(effect);
-	}
-
-	public override void RemoveOngingEffect(BaseEffect effect)
-	{
-		base.RemoveOngingEffect(effect);
-	}
-
-	public override bool TakeDamage(Actor Source, float Value, Controller Instigator = null, DamageEventInfo EventInfo = null)
-	{
-		game.streak = 0;
-		game.scoreMX = 1.0f;
-
-		return base.TakeDamage(Source, Value, Instigator, EventInfo);
 	}
 
 	protected override void OnDeath()

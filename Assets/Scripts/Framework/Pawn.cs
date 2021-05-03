@@ -12,23 +12,11 @@ public class Pawn : Actor
 
 	public float StartingHealth = 100.0f;
 	public float Health = 100.0f;
-	public float moveSpeed = 5; // Movement Speed
 	public bool IsSpectator = true;
 	public Transform groundCheck;
 	protected float groundDistance = 0.4f;
 	public LayerMask groundMask;
 	protected bool isGrounded;
-
-	protected bool radMenuOpen = false;
-
-	public List<BaseEffect> OngoingEffects;
-	public List<GameObject> ParticleGenerators;
-
-	public bool abilityMenuOpen
-	{
-		get { return radMenuOpen; }
-		set { radMenuOpen = value; }
-	}
 
 	/// <summary>
 	/// Controler who is in charge of this object. 
@@ -99,11 +87,6 @@ public class Pawn : Actor
 		
 	}
 
-	public virtual void Update()
-	{
-		OnUpdateEffect();
-	}
-
 	public virtual void Look()
 	{
 
@@ -132,66 +115,6 @@ public class Pawn : Actor
 	public virtual void Fire3(bool value)
 	{
 
-	}
-
-	public virtual void AbilityMenu(bool value)
-	{
-
-	}
-
-	public virtual void AddEffectHUD(BaseEffect effect)
-	{
-
-	}
-
-	public virtual void RemoveEffectHUD(BaseEffect effect)
-	{
-
-	}
-
-	public virtual void UpdateEffectHUD(BaseEffect effect, float percentageFill)
-	{
-
-	}
-
-	public void OnUpdateEffect()
-	{
-		List<BaseEffect> copyOngoingEffects = new List<BaseEffect>(OngoingEffects);
-
-		foreach (BaseEffect effect in copyOngoingEffects)
-		{
-			//Do OnUpdate for each effect in list
-			if (!IgnoreStatus)
-			{
-				effect.OnUpdate(this, Time.deltaTime);
-			}
-		}
-	}
-
-	public virtual void AddOngingEffect(BaseEffect effect)
-	{
-		if (!IgnoreStatus)
-		{
-			OngoingEffects.Add(effect);
-
-			if (effect.OnBeginEffect != null)
-			{
-				effect.OnBeginEffect(this);
-			}
-		}
-	}
-
-	public virtual void RemoveOngingEffect(BaseEffect effect)
-	{
-		if (!IgnoreStatus)
-		{
-			OngoingEffects.Remove(effect);
-
-			if (effect.OnEndEffect != null)
-			{
-				effect.OnEndEffect(this);
-			}
-		}
 	}
 
 	protected override bool ProcessDamage(Actor Source, float Value, DamageEventInfo EventInfo, Controller Instigator)
