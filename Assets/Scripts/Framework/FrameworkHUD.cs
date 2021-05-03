@@ -41,7 +41,6 @@ public class FrameworkHUD : Actor
 	private int angleSegment;
 	private float menuWait = 0f;
 
-
 	//HUD objects color variables -- Find way to make list of objects referenced by name?
 	[Header("---------- HUD Colors ----------")]
 	[Header("Generic")]
@@ -82,6 +81,10 @@ public class FrameworkHUD : Actor
 	public Color killsTextColor = new Color(119, 155, 255, 255);
 	public Color streakTextColor = new Color(119, 155, 255, 255);
 
+	[Header("Status")]
+	public Dictionary<string, int> status = new Dictionary<string, int>();
+	public Dictionary<string, GameObject> activeStatus = new Dictionary<string, GameObject>();
+
 	public void Start()
 	{
 		pc = controller.GetComponents<PlayerController>();
@@ -89,6 +92,11 @@ public class FrameworkHUD : Actor
 		game = controller.GetComponent<Game>();
 
 		angleSegment = 360 / options.Length;
+
+		status.Add("Fire Burn", 0);
+		status.Add("Frozen", 1);
+		status.Add("Enhanced", 0);
+		status.Add("Siphon", 1);
 
 		//For player 1
 		if (controller.PlayerNumber == 1)
@@ -315,6 +323,50 @@ public class FrameworkHUD : Actor
 		hud.StreakText.text = "Streak:" + game.streak.ToString();
 		hud.ScoreText.text = "Score:" + game.score.ToString();
 		hud.MultiplierText.text = "Multiplier:" + game.scoreMX.ToString("F2");
+	}
+
+	public void AddBuff(string effectName)
+	{
+		int index = -1;
+
+		if (status.ContainsKey(effectName))
+		{
+			index = status[effectName];
+		}
+
+		if (index >= 0)
+		{
+			GameObject stat = Instantiate(hud.Buffs[index], hud.BuffsPanel.transform);
+			activeStatus.Add(effectName, stat);
+		}
+	}
+
+	public void AddDebuff(string effectName)
+	{
+		int index = -1;
+
+		if (status.ContainsKey(effectName))
+		{
+			index = status[effectName];
+		}
+
+		if (index >= 0)
+		{
+			GameObject stat = Instantiate(hud.Debuffs[index], hud.DebuffsPanel.transform);
+			activeStatus.Add(effectName, stat);
+		}
+	}
+
+	public void RemoveBuff(string effectName)
+	{
+		Destroy(activeStatus[effectName]);
+		activeStatus.Remove(effectName);
+	}
+
+	public void RemoveDebuff(string effectName)
+	{
+		Destroy(activeStatus[effectName]);
+		activeStatus.Remove(effectName);
 	}
 
 	private void LateUpdate()

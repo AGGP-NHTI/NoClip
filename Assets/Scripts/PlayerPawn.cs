@@ -7,6 +7,7 @@ public class PlayerPawn : Pawn
 	public GameObject ProjectileSpawn;
 	Game game;
 	public AudioSource audioSource;
+	FrameworkHUD HUD;
 
 	[Header("Movement")]
 	public float verticalSensitivity = 3.0f;
@@ -86,10 +87,10 @@ public class PlayerPawn : Pawn
 		rb = gameObject.GetComponent<Rigidbody>();
 		game = FindObjectOfType<Game>();
 		cam = playerCamera.GetComponent<Camera>();
+		HUD = FindObjectOfType<FrameworkHUD>();
 		//rb.constraints = RigidbodyConstraints.FreezeRotation;
 		//rb.useGravity = true;
 		jumpForce = jumpHeight;
-
 
 		// Lock cursor
 		Cursor.lockState = CursorLockMode.Locked;
@@ -185,9 +186,17 @@ public class PlayerPawn : Pawn
 		{
 			criticalHealth.Play();
 			healthCritical = true;
-			exactPosition = false;
-			siphonActive = false;
 
+			if (exactPosition)
+			{
+				exactPosition = false;
+				HUD.RemoveBuff("Enhanced");
+			}
+			if (siphonActive)
+			{
+				siphonActive = false;
+				HUD.RemoveBuff("Siphon");
+			}
 		}
 		else if (Health > (StartingHealth * criticalLevel) && healthCritical == true)
 		{
@@ -585,6 +594,7 @@ public class PlayerPawn : Pawn
 			exactPosition = false;
 			moveSpeed /= spells[index].Amount;
 			jumpForce /= spells[index].Amount2;
+			HUD.RemoveBuff("Enhanced");
 
 		}
 		else if (exactPosition == false)
@@ -592,6 +602,7 @@ public class PlayerPawn : Pawn
 			exactPosition = true;
 			moveSpeed *= spells[index].Amount;
 			jumpForce *= spells[index].Amount2;
+			HUD.AddBuff("Enhanced");
 		}
 	}
 
@@ -600,11 +611,13 @@ public class PlayerPawn : Pawn
 		if (siphonActive == true)
 		{
 			siphonActive = false;
+			HUD.RemoveBuff("Siphon");
 
 		}
 		else if (siphonActive == false)
 		{
 			siphonActive = true;
+			HUD.AddBuff("Siphon");
 		}
 	}
 
@@ -612,12 +625,12 @@ public class PlayerPawn : Pawn
 	{
 		if (effect.typeOfBuff == BaseEffect.buffType.Buff)
 		{
-			//playerHUD.AddBuff(effect.Name);
+			HUD.AddBuff(effect.Name);
 		}
 
 		if (effect.typeOfBuff == BaseEffect.buffType.Debuff)
 		{
-			//playerHUD.AddDebuff(effect.Name);
+			HUD.AddDebuff(effect.Name);
 		}
 	}
 
@@ -625,12 +638,12 @@ public class PlayerPawn : Pawn
 	{
 		if (effect.typeOfBuff == BaseEffect.buffType.Buff)
 		{
-			//playerHUD.RemoveBuff(effect.Name);
+			HUD.RemoveBuff(effect.Name);
 		}
 
 		if (effect.typeOfBuff == BaseEffect.buffType.Debuff)
 		{
-			//playerHUD.RemoveDebuff(effect.Name);
+			HUD.RemoveDebuff(effect.Name);
 		}
 	}
 

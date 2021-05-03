@@ -1150,7 +1150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.047058824, g: 0.101960786, b: 1, a: 0.29411766}
+  m_Color: {r: 0.047058824, g: 0.101960786, b: 1, a: 0.09803922}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1311,7 +1311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1649166624808413018
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1574,7 +1574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.047058824, g: 0.101960786, b: 1, a: 0.29411766}
+  m_Color: {r: 0.047058824, g: 0.101960786, b: 1, a: 0.09803922}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3065,6 +3065,14 @@ MonoBehaviour:
   MultiplierText: {fileID: 6456380531834477752}
   KillsText: {fileID: 7995457399423625601}
   StreakText: {fileID: 9084514005496460338}
+  BuffsPanel: {fileID: 1649166624193293057}
+  DebuffsPanel: {fileID: 1649166625112860817}
+  Buffs:
+  - {fileID: 8874340674971858850, guid: 33190ab60f443734fa3ceeb032be2ac8, type: 3}
+  - {fileID: 3270427077121632453, guid: c65b698c0deb77245b7943f7bea50f50, type: 3}
+  Debuffs:
+  - {fileID: 989073288824802478, guid: fcd5f593a5f7c8242a092988dd66593f, type: 3}
+  - {fileID: 7393584162154415725, guid: 25a565c2eaa47244bb6243225c364f13, type: 3}
 --- !u!1 &5938868121889329638
 GameObject:
   m_ObjectHideFlags: 0
