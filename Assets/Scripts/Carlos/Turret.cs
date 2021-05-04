@@ -8,13 +8,19 @@ public class Turret : EnemyPawn
     public float fov = 30;
     public float attackRange = 25;
     public float damping = 5;
-    public float attackCoolDown = 3.0f;
+    public float attackCoolDown = 3;
     public float attackCooldownCounter = 0;
+    public GameObject SpawnLoc;
+    public GameObject SpawnPrefab;
+
+    float movespeed = 5;
 
     RaycastHit hit;
 
-    void Update()
+    public override void Update()
     {
+        base.Update();
+
         DebugRay();
 
         Vector3 targetDir = target.position - transform.position;
@@ -22,15 +28,16 @@ public class Turret : EnemyPawn
 
         if (angle < fov)
         {
-            print("Target Sighted");
-            var rotation = Quaternion.LookRotation(target.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
 
             if (targetDir.magnitude > attackRange)
             {
                 attackCooldownCounter = 0;
                 return;
             }
+
+            print("Target Sighted");
+            var rotation = Quaternion.LookRotation(target.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
 
             attackCooldownCounter += Time.deltaTime;
             if (attackCooldownCounter >= attackCoolDown)
@@ -46,10 +53,14 @@ public class Turret : EnemyPawn
         }
     }
 
-    public void PerformAttack()
+    public override void PerformAttack()
     {
 
-
+        GameObject instance = Instantiate(SpawnPrefab, SpawnLoc.transform.position, SpawnLoc.transform.rotation);
+        Rigidbody rBody = instance.GetComponent<Rigidbody>();
+        rBody.velocity = instance.transform.forward * movespeed;
+        rBody.useGravity = false;
+        Destroy(instance.gameObject, 15);
 
     }
 
