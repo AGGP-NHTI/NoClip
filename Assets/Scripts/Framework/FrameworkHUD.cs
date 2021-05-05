@@ -9,7 +9,6 @@ using TMPro;
 /// </summary>
 public class FrameworkHUD : Actor
 {
-	public bool developerMode = false;
 	public Controller controller;
 
 	private Game game;
@@ -114,11 +113,11 @@ public class FrameworkHUD : Actor
 	{
 		//Temporary key inputs to change health
 		{
-			if (Input.GetKeyDown(KeyCode.Y) && developerMode == true)
+			if (Input.GetKeyDown(KeyCode.Y))
 			{
 				playerPawn.Health -= 10f;
 			}
-			if (Input.GetKeyDown(KeyCode.H) && developerMode == true)
+			if (Input.GetKeyDown(KeyCode.H))
 			{
 				playerPawn.Health += 10f;
 			}

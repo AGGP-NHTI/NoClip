@@ -26,11 +26,6 @@ public class Freeze : Actor
 	public Actor owner;
 	public Controller contOwner;
 
-	private void Awake()
-	{
-		audioSource.PlayOneShot(freezeOneShot, 0.5f);
-	}
-
 	void Update()
 	{
 		lifeTic += Time.deltaTime;
