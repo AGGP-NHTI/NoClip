@@ -53,7 +53,7 @@ public class PlayerPawn : Pawn
 	public float lowLevel = 0.2f;
 
 	[Tooltip("As Percentage of Max Health where the player is Critical Health")]
-	[Range(0f,1f)]
+	[Range(0f, 1f)]
 	public float criticalLevel = 0.1f;
 	bool healthCritical = false;
 
@@ -65,6 +65,8 @@ public class PlayerPawn : Pawn
 	[Tooltip("Can the player cast a spell into the critical health zone?")]
 	public bool castCanKill = false;
 	public GameObject[] projectiles;
+	public AudioClip enhanceStart;
+	public AudioClip siphonAttack;
 
 	[Header("Radar")]
 	public bool exactPosition = false;
@@ -76,7 +78,7 @@ public class PlayerPawn : Pawn
 	public float attackCooldown;
 	float attackTimer;
 	public bool lastAttackWasMelee = false;
-	bool siphonActive = false;
+	public bool siphonActive = false;
 
 	public float getEnergy
 	{
@@ -95,6 +97,8 @@ public class PlayerPawn : Pawn
 		jumpForce = jumpHeight;
 
 		currentGravity = gravity;
+
+		game.ResetStats();
 	}
 
 	public override void Update()
@@ -157,7 +161,9 @@ public class PlayerPawn : Pawn
 			WallRunInput();
 
 			attackTimer += Time.deltaTime;
-		}	
+
+			game.UpdateHighStats();
+		}
 	}
 
 	private void UpdateHealth()
@@ -230,13 +236,13 @@ public class PlayerPawn : Pawn
 
 	void FixedUpdate()
 	{
-		if(isJumping && (jumpTime < jumpTimeMax))
+		if (isJumping && (jumpTime < jumpTimeMax))
 		{
 			Jump();
 			jumpTime += jumpTimeCount;
 		}
-		
-		if(jumpTime >= jumpTimeMax)
+
+		if (jumpTime >= jumpTimeMax)
 		{
 			jumpTime = 0.0f;
 			isJumping = false;
@@ -388,7 +394,7 @@ public class PlayerPawn : Pawn
 
 	public override void Jump()
 	{
-		if(!isWallRunning)
+		if (!isWallRunning)
 		{
 			//rb.velocity = new Vector3(0, jumpForce, 0);
 			rb.AddForce(Vector3.up * jumpForce * 50);
@@ -435,10 +441,10 @@ public class PlayerPawn : Pawn
 	{
 		gameObject.transform.Rotate(Vector3.up * value * Time.deltaTime * horizontalSensitivity);
 	}
-	
+
 	private void WallRunInput()
 	{
-		if(Input.GetKey(KeyCode.D) && wallRight && !isGrounded)
+		if (Input.GetKey(KeyCode.D) && wallRight && !isGrounded)
 		{
 			StartWallRun();
 		}
@@ -456,7 +462,7 @@ public class PlayerPawn : Pawn
 
 		rb.AddForce(gameObject.transform.forward * wallRunForce);
 
-		if(wallRight)
+		if (wallRight)
 		{
 			rb.AddForce(gameObject.transform.right * wallRunForce / 5 * Time.deltaTime);
 		}
@@ -476,7 +482,7 @@ public class PlayerPawn : Pawn
 		wallRight = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.right, checkDist, isWall);
 		wallLeft = Physics.Raycast(playerCamera.transform.position, -playerCamera.transform.right, checkDist, isWall);
 
-		if(!wallLeft && !wallRight)
+		if (!wallLeft && !wallRight)
 		{
 			StopWallRun();
 		}
@@ -500,7 +506,7 @@ public class PlayerPawn : Pawn
 				{
 					EnemyPawn epawn = hit.collider.GetComponent<EnemyPawn>();
 					epawn.TakeDamage(this, attackDamage, controller);
-					
+
 					//For when siphon ability is active
 					if (siphonActive)
 					{
@@ -532,7 +538,7 @@ public class PlayerPawn : Pawn
 
 	public override void AbilityMenu(bool value)
 	{
-		if (value && !pause.gameIsPaused) 
+		if (value && !pause.gameIsPaused)
 		{
 			radMenuOpen = true;
 			Cursor.lockState = CursorLockMode.None;
@@ -570,7 +576,7 @@ public class PlayerPawn : Pawn
 	{
 		GameObject fireball = Factory(projectiles[0], ProjectileSpawn.transform.position, ProjectileSpawn.transform.rotation, controller);
 		Fireball fb = fireball.GetComponent<Fireball>();
-		
+
 		fb.GetComponent<Rigidbody>().velocity = ProjectileSpawn.transform.forward * spells[index].Amount2;
 		fb.damage = spells[index].Amount;
 		fb.lifetime = spells[index].Duration;
@@ -603,6 +609,7 @@ public class PlayerPawn : Pawn
 		else if (exactPosition == false)
 		{
 			exactPosition = true;
+			audioSource.PlayOneShot(enhanceStart, 0.25f);
 			moveSpeed *= spells[index].Amount;
 			jumpForce *= spells[index].Amount2;
 			HUD.AddBuff("Enhanced");
@@ -622,6 +629,11 @@ public class PlayerPawn : Pawn
 			siphonActive = true;
 			HUD.AddBuff("Siphon");
 		}
+	}
+
+	public void PlaySiphon()
+	{
+		audioSource.PlayOneShot(siphonAttack);
 	}
 
 	public override void AddEffectHUD(BaseEffect effect)
