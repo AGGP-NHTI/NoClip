@@ -677,4 +677,9 @@ public class PlayerPawn : Pawn
 	{
 
 	}
+
+	public void CauseDeath()
+	{
+		OnDeath();
+	}
 }
