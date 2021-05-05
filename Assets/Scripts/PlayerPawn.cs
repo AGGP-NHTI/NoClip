@@ -65,6 +65,8 @@ public class PlayerPawn : Pawn
 	[Tooltip("Can the player cast a spell into the critical health zone?")]
 	public bool castCanKill = false;
 	public GameObject[] projectiles;
+	public AudioClip enhanceStart;
+	public AudioClip siphonAttack;
 
 	[Header("Radar")]
 	public bool exactPosition = false;
@@ -76,7 +78,7 @@ public class PlayerPawn : Pawn
 	public float attackCooldown;
 	float attackTimer;
 	public bool lastAttackWasMelee = false;
-	bool siphonActive = false;
+	public bool siphonActive = false;
 
 	public float getEnergy
 	{
@@ -95,6 +97,8 @@ public class PlayerPawn : Pawn
 		jumpForce = jumpHeight;
 
 		currentGravity = gravity;
+
+		game.ResetStats();
 	}
 
 	public override void Update()
@@ -157,6 +161,8 @@ public class PlayerPawn : Pawn
 			WallRunInput();
 
 			attackTimer += Time.deltaTime;
+
+			game.UpdateHighStats();
 		}	
 	}
 
@@ -603,6 +609,7 @@ public class PlayerPawn : Pawn
 		else if (exactPosition == false)
 		{
 			exactPosition = true;
+			audioSource.PlayOneShot(enhanceStart, 0.25f);
 			moveSpeed *= spells[index].Amount;
 			jumpForce *= spells[index].Amount2;
 			HUD.AddBuff("Enhanced");
@@ -622,6 +629,11 @@ public class PlayerPawn : Pawn
 			siphonActive = true;
 			HUD.AddBuff("Siphon");
 		}
+	}
+
+	public void PlaySiphon()
+	{
+		audioSource.PlayOneShot(siphonAttack);
 	}
 
 	public override void AddEffectHUD(BaseEffect effect)
