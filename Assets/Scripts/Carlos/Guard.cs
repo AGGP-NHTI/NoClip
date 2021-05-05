@@ -5,32 +5,26 @@ using UnityEngine;
 public class Guard : EnemyPawn
 {
     public GameObject MC;
-    public GameObject Guardian;
 
     public bool canMove = false;
+    public bool willMove = false;
     public float speed = 3;
 
     RaycastHit hit;
 
-    void Start()
-    {
-        Vector3 startPos = gameObject.transform.position;
-    }
-
     public override void Update()
     {
         base.Update();
+        RayHit();
 
         if (MC)
         {
             transform.LookAt(MC.transform);
-
-            RayHit();
         }
 
-        if (canMove)
+        if (canMove && willMove)
         {
-            Guardian.transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
     }
 
@@ -41,6 +35,15 @@ public class Guard : EnemyPawn
         if (Physics.Raycast(raycast, out hit))
         {
             Debug.Log("Raycast: " + hit.collider.gameObject.name);
+
+            if (hit.distance <= 1)
+            {
+                canMove = false;
+            }
+            if (hit.distance >= 5)
+            {
+                canMove = true;
+            }
         }
     }
 
@@ -50,21 +53,5 @@ public class Guard : EnemyPawn
         raycast.direction = this.transform.forward;
 
         Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.blue);
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        if(other == MC)
-        {
-            canMove = true;
-        }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (other == MC)
-        {
-            canMove = false;
-        }
     }
 }

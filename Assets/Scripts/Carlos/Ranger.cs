@@ -4,15 +4,89 @@ using UnityEngine;
 
 public class Ranger : EnemyPawn
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject MC;
 
-    // Update is called once per frame
+    public bool canMove = true;
+    public bool canShoot = false;
+    public float speed = 10;
+    float bulletSpeed = 10;
+    public float attackCoolDown = 3;
+    public float attackCooldownCounter = 0;
+    public GameObject SpawnLoc;
+    public GameObject SpawnPrefab;
+
+    RaycastHit hit;
+
     public override void Update()
     {
         base.Update();
+
+        if (MC)
+        {
+            transform.LookAt(MC.transform);
+
+            RayHit();
+        }
+
+        if (canMove)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+
+        if (canShoot)
+        {
+
+            attackCooldownCounter += Time.deltaTime;
+            if (attackCooldownCounter >= attackCoolDown)
+            {
+                print("Attack Performed");
+                attackCooldownCounter = 0;
+                PerformAttack();
+            }
+        }
+        else
+        {
+            attackCooldownCounter = 0;
+        }
+    }
+
+    public override void PerformAttack()
+    {
+
+        GameObject instance = Instantiate(SpawnPrefab, SpawnLoc.transform.position, SpawnLoc.transform.rotation);
+        Rigidbody rBody = instance.GetComponent<Rigidbody>();
+        rBody.velocity = instance.transform.forward * bulletSpeed;
+        rBody.useGravity = false;
+        Destroy(instance.gameObject, 15);
+
+    }
+
+    public void RayHit()
+    {
+        DebugRay();
+
+        if (Physics.Raycast(raycast, out hit))
+        {
+            Debug.Log("Raycast: " + hit.collider.gameObject.name);
+
+            if (hit.distance <= 10)
+            {
+                canMove = false;
+                canShoot = true;
+            }
+            if (hit.distance > 20)
+            {
+                canShoot = false;
+                canMove = true;
+            }
+        }
+    }
+
+    public void DebugRay()
+    {
+        raycast.origin = this.transform.position;
+        raycast.direction = this.transform.forward;
+
+        Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.green);
     }
 }

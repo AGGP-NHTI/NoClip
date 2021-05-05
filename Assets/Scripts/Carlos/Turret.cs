@@ -10,25 +10,31 @@ public class Turret : EnemyPawn
     public float damping = 5;
     public float attackCoolDown = 3;
     public float attackCooldownCounter = 0;
-    public GameObject SpawnLoc;
+    GameObject SpawnLoc;
     public GameObject SpawnPrefab;
+    public List<GameObject> Barrels;
+    int BarrelsIndex = 0;
 
     float movespeed = 5;
 
     RaycastHit hit;
 
+    public override void Start()
+    {
+        base.Start();
+        SpawnLoc = Barrels[BarrelsIndex];
+    }
+
     public override void Update()
     {
         base.Update();
-
-        DebugRay();
+        RayHit();
 
         Vector3 targetDir = target.position - transform.position;
         float angle = Vector3.Angle(targetDir, transform.forward);
 
         if (angle < fov)
         {
-
             if (targetDir.magnitude > attackRange)
             {
                 attackCooldownCounter = 0;
@@ -62,6 +68,25 @@ public class Turret : EnemyPawn
         rBody.useGravity = false;
         Destroy(instance.gameObject, 15);
 
+        BarrelsIndex++;
+
+        if (BarrelsIndex == 2)
+        {
+            BarrelsIndex = 0;
+        }
+
+        SpawnLoc = Barrels[BarrelsIndex];
+
+    }
+
+    public void RayHit()
+    {
+        DebugRay();
+
+        if (Physics.Raycast(raycast, out hit))
+        {
+            Debug.Log("Raycast: " + hit.collider.gameObject.tag);
+        }
     }
 
     public void DebugRay()
