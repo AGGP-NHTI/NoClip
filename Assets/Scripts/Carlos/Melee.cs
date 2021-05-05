@@ -6,7 +6,7 @@ public class Melee : EnemyPawn
 {
     public GameObject MC;
 
-    public bool canMove = true;
+    public bool canMove = false;
     public float speed = 10;
 
     RaycastHit hit;
