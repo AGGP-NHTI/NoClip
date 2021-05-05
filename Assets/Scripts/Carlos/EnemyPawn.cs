@@ -12,7 +12,7 @@ public class EnemyPawn : Pawn
 	public bool isDead = false;
 	Game game;
 
-	void Start()
+	public virtual void Start()
 	{
 		rb = GetComponent<Rigidbody>();
 		game = FindObjectOfType<Game>();
