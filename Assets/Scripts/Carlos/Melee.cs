@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Melee : EnemyPawn
 {
-    public GameObject MC;
-
     public bool canMove = false;
-    public float speed = 10;
 
     RaycastHit hit;
 
@@ -15,16 +12,16 @@ public class Melee : EnemyPawn
     {
         base.Update();
 
-        if (MC)
+        if (pp)
         {
-            transform.LookAt(MC.transform);
+            transform.LookAt(pp.transform);
 
             RayHit();
         }
 
         if (canMove)
         {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
     }
 
@@ -47,7 +44,7 @@ public class Melee : EnemyPawn
             if (hit.distance > 10)
             {
                 canMove = true;
-                speed = 10;
+                //moveSpeed = 10;
             }
         }
     }

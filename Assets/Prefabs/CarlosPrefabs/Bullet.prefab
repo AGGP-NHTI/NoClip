@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6197360177362835347}
   - component: {fileID: 6490521917640398763}
   - component: {fileID: 622551657520936000}
-  - component: {fileID: 7393461863496759467}
+  - component: {fileID: 1080577511146813087}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2371002070683659656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.22956, y: 0.22956, z: 0.22956}
+  m_LocalScale: {x: 0.45912, y: 0.45912, z: 0.45912}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7393461863496759467
+--- !u!114 &1080577511146813087
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,6 +122,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2371002070683659656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8768923551bbe9b478d77abcbe09de30, type: 3}
+  m_Script: {fileID: 11500000, guid: cbc231a8cb855634f834ace9c09e9f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IgnoresDamage: 1
+  IgnoreStatus: 1
+  LogDamageEvents: 1
+  damageAmount: 2
+  movementSpeed: 20
+  lifetime: 2

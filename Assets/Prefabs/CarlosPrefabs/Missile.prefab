@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6151206546810025483}
   - component: {fileID: 9190911533795705429}
   - component: {fileID: 1387941336590221895}
-  - component: {fileID: 6554445424841608642}
   - component: {fileID: -8904420056640216654}
-  - component: {fileID: 2387005903825565082}
+  - component: {fileID: 362946454327427716}
+  - component: {fileID: -1374527754968693112}
   m_Layer: 0
   m_Name: Missile
   m_TagString: Untagged
@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6058512333305473533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.24, y: 1.64, z: -13.385}
-  m_LocalScale: {x: 0.14704, y: 0.14704, z: 0.14704}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.51464, y: 0.51464, z: 2.5732}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -84,19 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &6554445424841608642
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6058512333305473533}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-8904420056640216654
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -113,7 +100,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2387005903825565082
+--- !u!136 &362946454327427716
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6058512333305473533}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-1374527754968693112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,6 +123,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6058512333305473533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1819edc0b5a1554bb559c843b408188, type: 3}
+  m_Script: {fileID: 11500000, guid: cbc231a8cb855634f834ace9c09e9f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IgnoresDamage: 1
+  IgnoreStatus: 1
+  LogDamageEvents: 1
+  damageAmount: 10
+  movementSpeed: 20
+  lifetime: 2

@@ -28,6 +28,12 @@ public class Turret : EnemyPawn
     public override void Update()
     {
         base.Update();
+
+        if (!target)
+        {
+            target = pp.transform;
+        }
+
         RayHit();
 
         Vector3 targetDir = target.position - transform.position;

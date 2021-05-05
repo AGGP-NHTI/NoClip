@@ -11,6 +11,7 @@ public class EnemyPawn : Pawn
 	public float energyOnDeath;
 	public bool isDead = false;
 	Game game;
+	protected PlayerPawn pp;
 
 	public virtual void Start()
 	{
@@ -21,6 +22,11 @@ public class EnemyPawn : Pawn
 	public override void Update()
 	{
 		base.Update();
+
+		if (!pp)
+		{
+			pp = FindObjectOfType<PlayerPawn>();
+		}
 
 		if (Health <= 0)
 		{

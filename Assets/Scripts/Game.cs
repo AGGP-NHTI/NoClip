@@ -142,7 +142,7 @@ public class Game : Info
 
 	public void ResetStats()
 	{
-		Debug.Log("Clear Stats for this run");
+		//Debug.Log("Clear Stats for this run");
 		PlayerPrefs.SetInt("Streak", 0);
 		PlayerPrefs.SetInt("Kills", 0);
 		PlayerPrefs.SetFloat("Score", 0);
