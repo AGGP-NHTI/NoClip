@@ -130,6 +130,7 @@ MonoBehaviour:
   scoreOnKill: 5
   energyOnHit: 2
   energyOnDeath: 4
+  isDead: 0
 --- !u!1 &3272678352717891044
 GameObject:
   m_ObjectHideFlags: 0
