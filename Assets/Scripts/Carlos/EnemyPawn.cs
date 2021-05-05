@@ -33,34 +33,12 @@ public class EnemyPawn : Pawn
 
 	}
 
-	protected override bool ProcessDamage(Actor Source, float Value, DamageEventInfo EventInfo, Controller Instigator)
-	{
-		PlayerPawn p = FindObjectOfType<PlayerPawn>();
-		if (p.siphonActive)
-		{
-			p.PlaySiphon();
-		}
-		return base.ProcessDamage(Source, Value, EventInfo, Instigator);
-	}
-
 	protected override void OnDeath()
 	{
 		game.score += scoreOnKill * game.scoreMX;
 		game.scoreMX += scoreOnKill / 100f;
 		game.kills++;
 		game.streak++;
-
-		//If the players streak is better than the current streak on this run
-		if (game.streak >= game.highStreakRun)
-		{
-			game.highStreakRun++;
-		}
-
-		//If the player gets a score multiplier that is better than the current scoreMX on this run
-		if (game.scoreMX >= game.highSMXRun)
-		{
-			game.highSMXRun = game.scoreMX;
-		}
 
 		PlayerPawn p = FindObjectOfType<PlayerPawn>();
 		

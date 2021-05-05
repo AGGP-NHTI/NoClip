@@ -137,7 +137,7 @@ MonoBehaviour:
   FreezeEffectReference: {fileID: 1650920807080658551}
   particleFreeze: {fileID: 6671096678197321049}
   audioSource: {fileID: 5714020302949530726}
-  freezeOneShot: {fileID: 8300000, guid: 21ecf7221d2668c4aa87f03d6df16d40, type: 3}
+  freezeOneShot: {fileID: 0}
   actors: []
   owner: {fileID: 0}
   contOwner: {fileID: 0}
@@ -172,7 +172,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 0.75
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0

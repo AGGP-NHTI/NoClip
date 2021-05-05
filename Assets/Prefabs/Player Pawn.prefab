@@ -278,7 +278,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 4914056158673950253}
   m_Layer: 0
   m_Name: Player Pawn
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -860,15 +860,12 @@ MonoBehaviour:
   projectiles:
   - {fileID: 3876250848648514420, guid: b920ca87fd1e3314d97db7709f0fbded, type: 3}
   - {fileID: 3876250848648514420, guid: b5edef6e903a3f747ac1944db2d143d4, type: 3}
-  enhanceStart: {fileID: 8300000, guid: 570cb7acafb8a754aa9ddc40e9c61353, type: 3}
-  siphonAttack: {fileID: 8300000, guid: d9c6812ed8e5b9944bfb4c77c2ac11ab, type: 3}
   exactPosition: 0
   swingSound: {fileID: 8300000, guid: 383465f0398ed17469ace8059c7b1d9c, type: 3}
   attackDamage: 50
   attackRange: 5
   attackCooldown: 0.4
   lastAttackWasMelee: 0
-  siphonActive: 0
 --- !u!1 &6716319801614861870
 GameObject:
   m_ObjectHideFlags: 0
