@@ -146,7 +146,7 @@ public class Game : Info
 		PlayerPrefs.SetInt("Streak", 0);
 		PlayerPrefs.SetInt("Kills", 0);
 		PlayerPrefs.SetFloat("Score", 0);
-		PlayerPrefs.SetFloat("SMX", 0);
+		PlayerPrefs.SetFloat("SMX", 1);
 		SaveStats();
 	}
 
