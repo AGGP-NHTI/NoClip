@@ -5,6 +5,7 @@ using UnityEngine;
 public class Turret : EnemyPawn
 {
     public Transform target;
+    public Transform head;
     public float fov = 30;
     public float attackRange = 25;
     public float damping = 5;
@@ -36,8 +37,8 @@ public class Turret : EnemyPawn
 
         RayHit();
 
-        Vector3 targetDir = target.position - transform.position;
-        float angle = Vector3.Angle(targetDir, transform.forward);
+        Vector3 targetDir = target.position - head.position;
+        float angle = Vector3.Angle(targetDir, head.forward);
 
         if (angle < fov)
         {
@@ -48,8 +49,8 @@ public class Turret : EnemyPawn
             }
 
             print("Target Sighted");
-            var rotation = Quaternion.LookRotation(target.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
+            var rotation = Quaternion.LookRotation(target.position - head.position);
+            head.rotation = Quaternion.Slerp(head.rotation, rotation, Time.deltaTime * damping);
 
             attackCooldownCounter += Time.deltaTime;
             if (attackCooldownCounter >= attackCoolDown)
@@ -97,8 +98,8 @@ public class Turret : EnemyPawn
 
     public void DebugRay()
     {
-        raycast.origin = this.transform.position;
-        raycast.direction = this.transform.forward;
+        raycast.origin = head.position;
+        raycast.direction = head.forward;
 
         Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.black);
     }
