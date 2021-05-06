@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class LevelEnd : MonoBehaviour
 {
+	Game game;
+
+	private void Awake()
+	{
+		game = FindObjectOfType<Game>();
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -18,6 +24,7 @@ public class LevelEnd : MonoBehaviour
 
 	public void EndLevel()
 	{
+		game.SaveStats();
 		SceneManager.LoadScene(2);
 	}
 }
