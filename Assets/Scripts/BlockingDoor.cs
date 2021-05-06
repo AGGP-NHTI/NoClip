@@ -18,13 +18,7 @@ public class BlockingDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		foreach(EnemyPawn e in enemies)
-		{
-            if(e.isDead)
-			{
-                length--;
-			}
-		}
+		
 
         if(length == 0)
 		{

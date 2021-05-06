@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Ranger : EnemyPawn
 {
-    public bool canMove = true;
     public bool canShoot = false;
     public float bulletSpeed = 10;
     public float attackCoolDown = 3;
