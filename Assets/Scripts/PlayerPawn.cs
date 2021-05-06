@@ -98,8 +98,6 @@ public class PlayerPawn : Pawn
 		jumpForce = jumpHeight;
 
 		currentGravity = gravity;
-
-		game.ResetStats();
 	}
 
 	public override void Update()
@@ -312,21 +310,21 @@ public class PlayerPawn : Pawn
 		{
 			if ((wallLeft && !Input.GetKey(KeyCode.D)) || (wallRight && !Input.GetKey(KeyCode.A)))
 			{
-				Debug.Log("normal jump");
+				//Debug.Log("normal jump");
 				rb.AddForce(Vector2.up * jumpForce * 25);
 				rb.AddForce(Vector3.up * jumpForce * 25);
 			}
 
 			if (wallRight && Input.GetKey(KeyCode.A))
 			{
-				Debug.Log("right wall hop");
+				//Debug.Log("right wall hop");
 				rb.AddForce(-transform.right * jumpForce * 250);
 				rb.AddForce(transform.forward * jumpForce * 150);
 			}
 
 			if (wallLeft && Input.GetKey(KeyCode.D))
 			{
-				Debug.Log("left wall hop");
+				//Debug.Log("left wall hop");
 				rb.AddForce(transform.right * jumpForce * 250);
 				rb.AddForce(transform.forward * jumpForce * 150);
 			}
@@ -594,6 +592,7 @@ public class PlayerPawn : Pawn
 
 	protected override void OnDeath()
 	{
+		game.SaveStats();
 		SceneManager.LoadScene(4);
 	}
 

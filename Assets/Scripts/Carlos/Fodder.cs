@@ -28,7 +28,7 @@ public class Fodder : EnemyPawn
 
 		if (explodeTime > deathTime)
 		{
-			Health -= 10000000;
+			Destroy(this.gameObject);
 		}
 
 		if (pp)
@@ -75,7 +75,12 @@ public class Fodder : EnemyPawn
 	public void Explode()
 	{
 		explode = true;
-		
+
+		foreach (GameObject go in ParticleGenerators)
+		{
+			go.SetActive(false);
+		}	
+
 		for (int i = 0; i < renderers.Length; i++)
 		{
 			renderers[i].enabled = false;
@@ -101,9 +106,15 @@ public class Fodder : EnemyPawn
 				{
 					p.TakeDamage(this, damage);
 				}
-			}
+			}	
+		}
+	}
 
-			
+	protected override void OnDeath()
+	{
+		if (!explode)
+		{
+			Explode();
 		}
 	}
 }

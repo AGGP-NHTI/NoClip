@@ -270,14 +270,15 @@ MonoBehaviour:
     m_Bits: 0
   OngoingEffects: []
   ParticleGenerators:
-  - {fileID: 7862307844828650132, guid: c135a57c46976e242b73e8274a639c15, type: 3}
-  - {fileID: 3083183727037683191, guid: c135a57c46976e242b73e8274a639c15, type: 3}
-  rb: {fileID: 6885236371719477812, guid: c135a57c46976e242b73e8274a639c15, type: 3}
+  - {fileID: 3465348065813852258}
+  - {fileID: 5290489678546336833}
+  rb: {fileID: 753112068425982403}
   scoreOnKill: 2
   energyOnHit: 2
   energyOnDeath: 10
   isDead: 0
-  canMove: 0
+  canMove: 1
+  door: {fileID: 0}
   damage: 10
   explosionRadius: 6
   actors: []

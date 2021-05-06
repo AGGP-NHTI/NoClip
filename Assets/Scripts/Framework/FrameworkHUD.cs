@@ -108,6 +108,7 @@ public class FrameworkHUD : Actor
 			HUDSpace = pc[0].HUDSpace;
 			PawnHUD = pc[0].PawnHUD;
 			SpectatorHUD = pc[0].SpectatorHUD;
+			game.ResetStats();
 		}
 	}
 

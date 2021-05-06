@@ -48,14 +48,14 @@ public class Turret : EnemyPawn
                 return;
             }
 
-            print("Target Sighted");
+            //print("Target Sighted");
             var rotation = Quaternion.LookRotation(target.position - head.position);
             head.rotation = Quaternion.Slerp(head.rotation, rotation, Time.deltaTime * damping);
 
             attackCooldownCounter += Time.deltaTime;
             if (attackCooldownCounter >= attackCoolDown)
             {
-                print("Attack Performed");
+                //print("Attack Performed");
                 attackCooldownCounter = 0;
                 PerformAttack();
             }
@@ -92,7 +92,7 @@ public class Turret : EnemyPawn
 
         if (Physics.Raycast(raycast, out hit))
         {
-            Debug.Log("Raycast: " + hit.collider.gameObject.tag);
+            //Debug.Log("Raycast: " + hit.collider.gameObject.tag);
         }
     }
 

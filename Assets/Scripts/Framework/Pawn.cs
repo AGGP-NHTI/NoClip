@@ -210,8 +210,6 @@ public class Pawn : Actor
 			{
 				controller.RequestSpectator();
 			}
-
-			OnDeath();
 		}
 
 		if (EventInfo.DamageType.DoesFireDamage)
@@ -234,6 +232,6 @@ public class Pawn : Actor
 
 	protected virtual void OnDeath()
 	{
-		Destroy(gameObject);
+		
 	}
 }

@@ -35,7 +35,7 @@ public class Ranger : EnemyPawn
             attackCooldownCounter += Time.deltaTime;
             if (attackCooldownCounter >= attackCoolDown)
             {
-                print("Attack Performed");
+                //print("Attack Performed");
                 attackCooldownCounter = 0;
                 PerformAttack();
             }
@@ -63,7 +63,7 @@ public class Ranger : EnemyPawn
 
         if (Physics.Raycast(raycast, out hit))
         {
-            Debug.Log("Raycast: " + hit.collider.gameObject.name);
+            //Debug.Log("Raycast: " + hit.collider.gameObject.name);
 
             if (hit.distance <= 10)
             {

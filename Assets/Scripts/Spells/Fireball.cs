@@ -41,7 +41,6 @@ public class Fireball : Actor
 		{
 			Destroy(this.gameObject);
 		}
-
 	}
 
 	private void OnTriggerEnter(Collider other)

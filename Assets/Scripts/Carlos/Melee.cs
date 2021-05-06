@@ -43,7 +43,7 @@ public class Melee : EnemyPawn
 
 		if (Physics.Raycast(raycast, out hit))
 		{
-			Debug.Log("Raycast: " + hit.collider.gameObject.name);
+			//Debug.Log("Raycast: " + hit.collider.gameObject.name);
 
 			if (canAttack && attackCooldownCounter >= attackCoolDown)
 			{
@@ -77,5 +77,10 @@ public class Melee : EnemyPawn
 		raycast.direction = this.transform.forward;
 
 		Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.yellow);
+	}
+
+	protected override void OnDeath()
+	{
+		base.OnDeath();
 	}
 }

@@ -587,21 +587,22 @@ MonoBehaviour:
     m_Bits: 0
   OngoingEffects: []
   ParticleGenerators:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 751539658532799154}
+  - {fileID: 751539657817237678}
   rb: {fileID: 751539657486823527}
   scoreOnKill: 5
   energyOnHit: 5
   energyOnDeath: 10
   isDead: 0
-  canMove: 0
+  canMove: 1
+  door: {fileID: 0}
   canAttack: 0
   attackCoolDown: 1
   attackCooldownCounter: 0
   attackDamage: 3
   attackRange: 2
   maxCheckDist: 10
-  minCheckDist: 5
+  minCheckDist: 2
   attack: {fileID: 8300000, guid: 1715c03725d253b428a0169f9dea4cc9, type: 3}
 --- !u!136 &1511949922010168395
 CapsuleCollider:
