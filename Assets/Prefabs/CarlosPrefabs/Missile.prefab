@@ -129,6 +129,6 @@ MonoBehaviour:
   IgnoresDamage: 1
   IgnoreStatus: 1
   LogDamageEvents: 1
-  damageAmount: 10
+  damageAmount: 5
   movementSpeed: 20
   lifetime: 10

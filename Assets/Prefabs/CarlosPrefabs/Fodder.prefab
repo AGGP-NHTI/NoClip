@@ -203,9 +203,10 @@ GameObject:
   - component: {fileID: 8264050410857220708}
   - component: {fileID: 753112068425982403}
   - component: {fileID: 4009606130597549107}
+  - component: {fileID: 3442851997050836893}
   m_Layer: 0
   m_Name: Fodder
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,8 +260,8 @@ MonoBehaviour:
   IgnoresDamage: 0
   IgnoreStatus: 0
   LogDamageEvents: 1
-  StartingHealth: 20
-  Health: 20
+  StartingHealth: 10
+  Health: 10
   moveSpeed: 10
   IsSpectator: 0
   groundCheck: {fileID: 0}
@@ -277,7 +278,7 @@ MonoBehaviour:
   energyOnDeath: 10
   isDead: 0
   canMove: 0
-  damage: 20
+  damage: 10
   explosionRadius: 6
   actors: []
   explosion: {fileID: 8300000, guid: 137a5410ef6c6cc46b56df58f1bff055, type: 3}
@@ -305,6 +306,20 @@ MonoBehaviour:
   - {fileID: 7199651779263535125}
   - {fileID: 9033914006856021484}
   - {fileID: 7428958726711247658}
+--- !u!136 &3442851997050836893
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2171123084757293876}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2332860789763020457
 GameObject:
   m_ObjectHideFlags: 0
