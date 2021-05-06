@@ -9876,7 +9876,7 @@ MonoBehaviour:
   attackCoolDown: 1
   attackCooldownCounter: 0
   attackDamage: 3
-  attack: {fileID: 0}
+  attack: {fileID: 8300000, guid: 1715c03725d253b428a0169f9dea4cc9, type: 3}
 --- !u!1 &8872613066762084877
 GameObject:
   m_ObjectHideFlags: 0
