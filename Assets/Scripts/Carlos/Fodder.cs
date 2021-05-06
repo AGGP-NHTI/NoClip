@@ -4,52 +4,85 @@ using UnityEngine;
 
 public class Fodder : EnemyPawn
 {
-    public GameObject MC;
+	public bool canMove = true;
 
-    public bool canMove = true;
-    public float speed = 10;
+	RaycastHit hit;
 
-    RaycastHit hit;
+	float distanceToTarget;
+	public float damage = 20f;
+	public float explosionRadius = 3f;
+	public List<Actor> actors;
+	bool explode = false;
 
-    public override void Update()
-    {
-        base.Update();
+	public override void Update()
+	{
+		base.Update();
 
-        if (MC)
-        {
-            transform.LookAt(MC.transform);
+		if (pp)
+		{
+			transform.LookAt(pp.transform);
 
-            RayHit();
-        }
+			RayHit();
+		}
 
-        if (canMove)
-        {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        }
-    }
+		if (canMove)
+		{
+			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+		}
+	}
 
-    public void RayHit()
-    {
-        DebugRay();
+	public void RayHit()
+	{
+		DebugRay();
 
-        if (Physics.Raycast(raycast, out hit))
-        {
-            Debug.Log("Raycast: " + hit.collider.gameObject.name);
+		if (Physics.Raycast(raycast, out hit))
+		{
+			//Debug.Log("Raycast: " + hit.collider.gameObject.name);
 
-            if (hit.distance <= 1)
-            {
-                canMove = false;
+			if (hit.distance <= explosionRadius / 2)
+			{
+				canMove = false;
 
-                OnDeath();
-            }
-        }
-    }
+				if (!explode)
+				{
+					Explode();
+				}
+			}
+		}
+	}
 
-    public void DebugRay()
-    {
-        raycast.origin = this.transform.position;
-        raycast.direction = this.transform.forward;
+	public void DebugRay()
+	{
+		raycast.origin = this.transform.position;
+		raycast.direction = this.transform.forward;
 
-        Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.red);
-    }
+		Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.red);
+	}
+
+	public void Explode()
+	{
+		explode = true;
+
+		actors.AddRange(FindObjectsOfType<Actor>());
+
+		actors.Remove(this);
+
+		foreach (Actor a in actors)
+		{
+			//Find distance to target
+			distanceToTarget = Vector3.Distance(a.gameObject.transform.position, transform.position);
+
+			//If target is within damage range
+			if (distanceToTarget <= explosionRadius)
+			{
+				Pawn p = a.gameObject.GetComponent<Pawn>();
+				if (p)
+				{
+					p.TakeDamage(this, damage);
+				}
+			}
+
+			Health -= 10000f;
+		}
+	}
 }

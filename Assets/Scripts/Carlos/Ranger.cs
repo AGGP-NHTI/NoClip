@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class Ranger : EnemyPawn
 {
-    public GameObject MC;
-
     public bool canMove = true;
     public bool canShoot = false;
-    public float speed = 10;
-    float bulletSpeed = 10;
+    public float bulletSpeed = 10;
     public float attackCoolDown = 3;
     public float attackCooldownCounter = 0;
     public GameObject SpawnLoc;
@@ -21,16 +18,16 @@ public class Ranger : EnemyPawn
     {
         base.Update();
 
-        if (MC)
+        if (pp)
         {
-            transform.LookAt(MC.transform);
+            transform.LookAt(pp.transform);
 
             RayHit();
         }
 
         if (canMove)
         {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
 
         if (canShoot)

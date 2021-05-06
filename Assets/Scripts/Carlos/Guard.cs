@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Guard : EnemyPawn
 {
-    public GameObject MC;
-
     public bool canMove = false;
     public bool willMove = false;
-    public float speed = 3;
 
     RaycastHit hit;
 
@@ -17,14 +14,14 @@ public class Guard : EnemyPawn
         base.Update();
         RayHit();
 
-        if (MC)
+        if (pp)
         {
-            transform.LookAt(MC.transform);
+            transform.LookAt(pp.transform);
         }
 
         if (canMove && willMove)
         {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
     }
 

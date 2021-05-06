@@ -206,7 +206,10 @@ public class Pawn : Actor
 
 			IgnoresDamage = true;
 
-			controller.RequestSpectator();
+			if (controller.IsHuman)
+			{
+				controller.RequestSpectator();
+			}
 
 			OnDeath();
 		}
