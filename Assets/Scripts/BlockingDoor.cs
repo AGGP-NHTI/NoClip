@@ -6,29 +6,25 @@ public class BlockingDoor : MonoBehaviour
 {
     public List<EnemyPawn> enemies;
 
-    public int length;
-
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-        length = enemies.Count;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-		for(int i = 0; i < length; i++)
+	public void Awake()
+	{
+		foreach(EnemyPawn e in enemies)
 		{
-            if(enemies[i].isDead)
-			{
-                length -= 1;
-			}
+			e.door = this;
 		}
+	}
 
-        if(length <= 0)
+	// Update is called once per frame
+	void Update()
+    {
+        if (enemies.Count == 0)
 		{
             Destroy(gameObject);
 		}
     }
+
+    public void RemoveEnemy(EnemyPawn enemy)
+	{
+        enemies.Remove(enemy);
+	}
 }

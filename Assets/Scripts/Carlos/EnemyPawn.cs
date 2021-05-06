@@ -11,6 +11,7 @@ public class EnemyPawn : Pawn
 	public float energyOnDeath;
 	public bool isDead = false;
 	public bool canMove = false;
+	public BlockingDoor door;
 	Game game;
 	protected PlayerPawn pp;
 
@@ -78,6 +79,11 @@ public class EnemyPawn : Pawn
 		}
 
 		isDead = true;
+
+		if(door)
+		{
+			door.RemoveEnemy(this);
+		}
 
 		Destroy(this.gameObject);
 	}
