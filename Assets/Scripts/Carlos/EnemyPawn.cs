@@ -10,6 +10,7 @@ public class EnemyPawn : Pawn
 	public float energyOnHit;
 	public float energyOnDeath;
 	public bool isDead = false;
+	public bool canMove = false;
 	Game game;
 	protected PlayerPawn pp;
 
@@ -17,6 +18,7 @@ public class EnemyPawn : Pawn
 	{
 		rb = GetComponent<Rigidbody>();
 		game = FindObjectOfType<Game>();
+		canMove = false;
 	}
 
 	public override void Update()

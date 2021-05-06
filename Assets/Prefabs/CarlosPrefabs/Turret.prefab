@@ -10156,7 +10156,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &6868123837840423970
 MonoBehaviour:
@@ -10190,10 +10190,11 @@ MonoBehaviour:
   energyOnHit: 4
   energyOnDeath: 20
   isDead: 0
+  canMove: 0
   target: {fileID: 0}
   head: {fileID: 6868123838179718516}
-  fov: 30
-  attackRange: 50
+  fov: 60
+  attackRange: 100
   damping: 1
   attackCoolDown: 1
   attackCooldownCounter: 0

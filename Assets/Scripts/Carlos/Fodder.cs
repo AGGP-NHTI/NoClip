@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Fodder : EnemyPawn
 {
-	public bool canMove = true;
-
 	RaycastHit hit;
 
 	float distanceToTarget;

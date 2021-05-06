@@ -276,7 +276,7 @@ MonoBehaviour:
   energyOnHit: 2
   energyOnDeath: 10
   isDead: 0
-  canMove: 1
+  canMove: 0
   damage: 20
   explosionRadius: 6
   actors: []

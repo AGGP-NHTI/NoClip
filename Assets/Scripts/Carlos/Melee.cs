@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Melee : EnemyPawn
 {
-	public bool canMove = false;
 	public bool canAttack = false;
 	public float attackCoolDown = 1;
 	public float attackCooldownCounter = 0;

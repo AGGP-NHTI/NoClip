@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Guard : EnemyPawn
 {
-    public bool canMove = false;
     public bool willMove = false;
     public bool canAttack = false;
     public float attackRange = 2;
