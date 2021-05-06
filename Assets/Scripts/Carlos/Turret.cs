@@ -32,7 +32,6 @@ public class Turret : EnemyPawn
 
         if (!target)
         {
-            print("Aquiring target");
             target = pp.transform;
         }
 
