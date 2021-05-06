@@ -76,6 +76,11 @@ public class Fodder : EnemyPawn
 	{
 		explode = true;
 
+		if (door)
+		{
+			door.RemoveEnemy(this);
+		}
+
 		foreach (GameObject go in ParticleGenerators)
 		{
 			go.SetActive(false);
