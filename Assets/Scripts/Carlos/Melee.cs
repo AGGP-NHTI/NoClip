@@ -10,6 +10,7 @@ public class Melee : EnemyPawn
 	public float attackDamage = 3f;
 	public float attackRange = 2f;
 	public float maxCheckDist = 10f;
+	public float minCheckDist = 5f;
 	public AudioClip attack;
 
 	RaycastHit hit;
@@ -61,7 +62,7 @@ public class Melee : EnemyPawn
 				canMove = false;
 				canAttack = true;
 			}
-			if (hit.distance > 10 && hit.distance < maxCheckDist)
+			if (hit.distance > minCheckDist && hit.distance < maxCheckDist)
 			{
 				canAttack = false;
 				canMove = true;

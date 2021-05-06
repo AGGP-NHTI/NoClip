@@ -688,9 +688,9 @@ MonoBehaviour:
   - {fileID: 5139589612475758561}
   - {fileID: 7697967679559825720}
   rb: {fileID: 4921492817351642955}
-  scoreOnKill: 0
-  energyOnHit: 0
-  energyOnDeath: 0
+  scoreOnKill: 10
+  energyOnHit: 5
+  energyOnDeath: 10
   isDead: 0
   canMove: 0
   canShoot: 0
