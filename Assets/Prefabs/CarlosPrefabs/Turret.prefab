@@ -10116,6 +10116,7 @@ GameObject:
   - component: {fileID: 6868123837840423968}
   - component: {fileID: 6868123837840423969}
   - component: {fileID: 6868123837840423970}
+  - component: {fileID: 7582340985627214340}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Enemy
@@ -10200,6 +10201,20 @@ MonoBehaviour:
   Barrels:
   - {fileID: 6868123838030459567}
   - {fileID: 6868123838288301613}
+--- !u!136 &7582340985627214340
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6868123837840423971}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.85, z: 0}
 --- !u!1 &6868123837845142218
 GameObject:
   m_ObjectHideFlags: 0
@@ -10511,7 +10526,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6868123838030459567}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: 0, z: 1.47}
+  m_LocalPosition: {x: 0.3, y: 0, z: 2.5}
   m_LocalScale: {x: 1.1390818, y: 1.1390818, z: 1.1390818}
   m_Children: []
   m_Father: {fileID: 6868123838179718516}
@@ -10644,7 +10659,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6868123838288301613}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 0, z: 1.4699999}
+  m_LocalPosition: {x: -0.3, y: 0, z: 2.5}
   m_LocalScale: {x: 1.1390818, y: 1.1390818, z: 1.1390818}
   m_Children: []
   m_Father: {fileID: 6868123838179718516}

@@ -25,7 +25,6 @@ public class PauseIG : MonoBehaviour
 	{
 		if (Input.GetKeyDown("escape"))
 		{
-			Debug.Log("Escape Pressed");
 			if (gameIsPaused)
 			{
 				Resume();
@@ -56,7 +55,6 @@ public class PauseIG : MonoBehaviour
 	{
 		if (pauseIndex == 1)
 		{
-			Debug.Log("Resume");
 			pauseMenuUI.SetActive(false);
 			FHUD.currentPawnHUD.SetActive(true);
 			Time.timeScale = 1f;
@@ -69,7 +67,6 @@ public class PauseIG : MonoBehaviour
 
 	public void Pause()
 	{
-		Debug.Log("Pause");
 		pauseMenuUI.SetActive(true);
 		FHUD.currentPawnHUD.SetActive(false);
 		Time.timeScale = 0f;

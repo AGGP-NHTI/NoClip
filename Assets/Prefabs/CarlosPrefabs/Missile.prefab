@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6151206546810025483}
   - component: {fileID: 9190911533795705429}
   - component: {fileID: 1387941336590221895}
-  - component: {fileID: -8904420056640216654}
   - component: {fileID: 362946454327427716}
+  - component: {fileID: 8943765393998881118}
   - component: {fileID: -1374527754968693112}
   m_Layer: 0
   m_Name: Missile
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6058512333305473533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.51464, y: 0.51464, z: 2.5732}
+  m_LocalScale: {x: 0.25732, y: 0.25732, z: 2.47}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -84,7 +84,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &-8904420056640216654
+--- !u!136 &362946454327427716
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6058512333305473533}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8943765393998881118
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,20 +114,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &362946454327427716
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6058512333305473533}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-1374527754968693112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,4 +131,4 @@ MonoBehaviour:
   LogDamageEvents: 1
   damageAmount: 10
   movementSpeed: 20
-  lifetime: 2
+  lifetime: 10

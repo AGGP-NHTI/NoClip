@@ -11,7 +11,7 @@ public class Projectile : Actor {
     
     public virtual void Start()
     {
-        rb = gameObject.AddComponent<Rigidbody>();
+        rb = gameObject.GetComponent<Rigidbody>();
         rb.velocity = transform.forward * movementSpeed;
         rb.useGravity = false; 
         Destroy(gameObject, lifetime);

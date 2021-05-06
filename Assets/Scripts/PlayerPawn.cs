@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerPawn : Pawn
 {
@@ -225,6 +226,7 @@ public class PlayerPawn : Pawn
 		{
 			criticalHealth.Stop();
 			Health = 0;
+			OnDeath();
 		}
 
 		//Prevent health from going over max
@@ -250,100 +252,6 @@ public class PlayerPawn : Pawn
 
 	}
 
-	//Old Look/Jump/Movement Code Using CharacterController Component
-	/*public override void Look()
-	{
-		if (radMenuOpen == false)
-		{
-			rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-			rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);    //Set max angle for looking up and down
-			playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);   //Rotate Player along X 
-			transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0); //Rotate Camera along Y
-		}
-
-		if (wallRight && isWallRunning)
-		{
-			if (Mathf.Abs(wallRunCamTilt) < maxCamTilt)
-			{
-				wallRunCamTilt += Time.deltaTime * maxCamTilt * 2;
-			}
-		}
-
-		if (wallLeft && isWallRunning)
-		{
-			if (Mathf.Abs(wallRunCamTilt) < maxCamTilt)
-			{
-				wallRunCamTilt -= Time.deltaTime * maxCamTilt * 2;
-			}
-		}
-
-		if (!isWallRunning && wallRunCamTilt > 0 && !isGrounded)
-		{
-			wallRunCamTilt = 0.0f;
-			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
-		}
-
-		if (!isWallRunning && wallRunCamTilt < 0 && !isGrounded)
-		{
-			wallRunCamTilt = 0.0f;
-			playerCamera.transform.localRotation = Quaternion.Euler(playerCamera.transform.rotation.x, playerCamera.transform.rotation.y, wallRunCamTilt);
-		}
-	}
-
-	public override void Move(float x, float z)
-	{
-		//Original Movement
-		//rb.velocity = gameObject.transform.right * x * moveSpeed + gameObject.transform.forward * z * moveSpeed;
-		
-		//For player movement using CharacterController Component
-		Vector3 move = gameObject.transform.right * x + gameObject.transform.forward * z;
-		CC.Move(move * moveSpeed * Time.deltaTime);
-
-		//For Falling
-		if(!isWallRunning)
-		{
-			velocity.y += gravity * Time.deltaTime;
-			//CC.Move(velocity * Time.deltaTime);
-		}
-		if(isWallRunning)
-		{
-			velocity.y += wallGrav * Time.deltaTime;
-			//CC.Move(velocity * Time.deltaTime);
-		}
-	}*/
-
-	/*public override void Jump()
-	{
-		if (isGrounded)
-		{
-			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-		}
-
-		/*if (isWallRunning)
-		{
-			if(wallLeft && !Input.GetKey(KeyCode.D) || (wallRight && !Input.GetKey(KeyCode.A)))
-			{
-				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
-				CC.Move(transform.forward * (jumpForce / 5) * Time.deltaTime);
-			}
-
-			if (wallLeft && Input.GetKey(KeyCode.D))
-			{
-				StopWallRun();
-				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
-				CC.Move(transform.forward * jumpForce * Time.deltaTime);
-			}
-
-			if (wallRight && Input.GetKey(KeyCode.A))
-			{
-				StopWallRun();
-				CC.Move(transform.up * (jumpForce / 5) * Time.deltaTime);
-				CC.Move(transform.forward * jumpForce * Time.deltaTime);
-			}
-		}
-	}*/
-
-	//New Movement Using Rigidbody
 	void GetInput()
 	{
 		leftStick = Vector2.zero;
@@ -514,7 +422,6 @@ public class PlayerPawn : Pawn
 					}
 				}
 			}
-			Debug.Log("Attack");
 			attackTimer = 0;
 		}
 	}
@@ -687,9 +594,10 @@ public class PlayerPawn : Pawn
 
 	protected override void OnDeath()
 	{
-
+		SceneManager.LoadScene(4);
 	}
 
+	//For death pit
 	public void CauseDeath()
 	{
 		OnDeath();

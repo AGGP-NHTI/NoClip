@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 7231183217312763741}
   - component: {fileID: 7231183217312763738}
   m_Layer: 0
-  m_Name: Guardian
+  m_Name: Guardian (Old Model)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,6 +278,11 @@ MonoBehaviour:
   isDead: 0
   canMove: 0
   willMove: 0
+  canAttack: 0
+  attackRange: 2
+  attackCoolDown: 0.5
+  attackDamage: 3
+  attack: {fileID: 8300000, guid: 1715c03725d253b428a0169f9dea4cc9, type: 3}
 --- !u!1 &9159171144558219485
 GameObject:
   m_ObjectHideFlags: 0

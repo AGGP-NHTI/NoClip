@@ -12,11 +12,26 @@ public class Fodder : EnemyPawn
 	public float damage = 20f;
 	public float explosionRadius = 3f;
 	public List<Actor> actors;
+	public AudioClip explosion;
+	public ParticleSystem ps;
 	bool explode = false;
+	float explodeTime = 0f;
+	public float deathTime = 5f;
+	public MeshRenderer[] renderers;
 
 	public override void Update()
 	{
 		base.Update();
+
+		if (explode)
+		{
+			explodeTime += Time.deltaTime;
+		}
+
+		if (explodeTime > deathTime)
+		{
+			Health -= 10000000;
+		}
 
 		if (pp)
 		{
@@ -62,6 +77,14 @@ public class Fodder : EnemyPawn
 	public void Explode()
 	{
 		explode = true;
+		
+		for (int i = 0; i < renderers.Length; i++)
+		{
+			renderers[i].enabled = false;
+		}
+
+		AudioSource.PlayClipAtPoint(explosion, gameObject.transform.position, 0.25f);
+		ps.Play();
 
 		actors.AddRange(FindObjectsOfType<Actor>());
 
@@ -82,7 +105,7 @@ public class Fodder : EnemyPawn
 				}
 			}
 
-			Health -= 10000f;
+			
 		}
 	}
 }

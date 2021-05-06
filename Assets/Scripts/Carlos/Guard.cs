@@ -6,6 +6,12 @@ public class Guard : EnemyPawn
 {
     public bool canMove = false;
     public bool willMove = false;
+    public bool canAttack = false;
+    public float attackRange = 2;
+    public float attackCoolDown = 1;
+    float attackCooldownCounter = 0;
+    public float attackDamage = 3f;
+    public AudioClip attack;
 
     RaycastHit hit;
 
@@ -23,6 +29,11 @@ public class Guard : EnemyPawn
         {
             transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
+
+        if (canAttack)
+        {
+            attackCooldownCounter += Time.deltaTime;
+        }
     }
 
     public void RayHit()
@@ -31,15 +42,26 @@ public class Guard : EnemyPawn
 
         if (Physics.Raycast(raycast, out hit))
         {
-            Debug.Log("Raycast: " + hit.collider.gameObject.name);
+            //Debug.Log("Raycast: " + hit.collider.gameObject.name);
 
-            if (hit.distance <= 1)
+            if (canAttack && attackCooldownCounter >= attackCoolDown)
+            {
+                Pawn p = hit.collider.GetComponent<Pawn>();
+                p.TakeDamage(this, attackDamage);
+                Debug.Log(p.name);
+                AudioSource.PlayClipAtPoint(attack, transform.position, 0.5f);
+                attackCooldownCounter = 0;
+            }
+
+            if (hit.distance <= attackRange)
             {
                 canMove = false;
+                canAttack = true;
             }
             if (hit.distance >= 5)
             {
                 canMove = true;
+                canAttack = false;
             }
         }
     }

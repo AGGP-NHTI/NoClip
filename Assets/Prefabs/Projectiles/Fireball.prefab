@@ -9761,7 +9761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Fire Burn
   Source: {fileID: 0}
-  Amount: 2
+  Amount: 5
   MaxDuration: 10
   CurrentDuration: 10
   typeOfBuff: 1
