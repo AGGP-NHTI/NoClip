@@ -103,4 +103,9 @@ public class Turret : EnemyPawn
 
         Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.black);
     }
+
+	public override void CauseDeath()
+	{
+        base.CauseDeath();
+    }
 }

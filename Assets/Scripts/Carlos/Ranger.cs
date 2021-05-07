@@ -13,7 +13,12 @@ public class Ranger : EnemyPawn
 
     RaycastHit hit;
 
-    public override void Update()
+	void Awake()
+	{
+        canMove = false;
+	}
+
+	public override void Update()
     {
         base.Update();
 
@@ -84,5 +89,10 @@ public class Ranger : EnemyPawn
         raycast.direction = this.transform.forward;
 
         Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.green);
+    }
+
+    public override void CauseDeath()
+    {
+        base.CauseDeath();
     }
 }

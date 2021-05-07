@@ -597,8 +597,8 @@ public class PlayerPawn : Pawn
 	}
 
 	//For death pit
-	public void CauseDeath()
+	public override void CauseDeath()
 	{
-		OnDeath();
+		base.CauseDeath();
 	}
 }

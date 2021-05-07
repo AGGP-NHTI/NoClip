@@ -6,7 +6,7 @@ public class DeathZone : MonoBehaviour
 {
 	private void OnTriggerEnter(Collider other)
 	{
-		PlayerPawn pc = other.GetComponent<PlayerPawn>();
+		Pawn pc = other.GetComponent<Pawn>();
 
 		if(pc)
 		{

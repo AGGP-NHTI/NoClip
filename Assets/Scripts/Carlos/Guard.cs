@@ -72,4 +72,9 @@ public class Guard : EnemyPawn
 
         Debug.DrawRay(raycast.origin, raycast.direction * hit.distance, Color.blue);
     }
+
+    public override void CauseDeath()
+    {
+        base.CauseDeath();
+    }
 }
