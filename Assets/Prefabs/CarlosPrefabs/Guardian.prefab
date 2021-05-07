@@ -475,6 +475,7 @@ MonoBehaviour:
   energyOnDeath: 15
   isDead: 0
   canMove: 0
+  door: {fileID: 0}
   willMove: 0
   canAttack: 0
   attackRange: 2

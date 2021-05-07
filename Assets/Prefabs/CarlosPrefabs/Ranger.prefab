@@ -693,6 +693,7 @@ MonoBehaviour:
   energyOnDeath: 10
   isDead: 0
   canMove: 0
+  door: {fileID: 0}
   canShoot: 0
   bulletSpeed: 10
   attackCoolDown: 0.5
